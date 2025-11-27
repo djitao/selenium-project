@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title id="head-title">rapport_test_nigelec_prepaye.html</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
+  </head>
+  <body>
+    <h1 id="title">rapport_test_nigelec_prepaye.html</h1>
+    <p>Report generated on 06-Aug-2025 at 19:31:10 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.1.1</p>
+    <div id="environment-header">
+      <h2>Environment</h2>
+    </div>
+    <table id="environment"></table>
+    <!-- TEMPLATES -->
+      <template id="template_environment_row">
+      <tr>
+        <td></td>
+        <td></td>
+      </tr>
+    </template>
+    <template id="template_results-table__body--empty">
+      <tbody class="results-table-row">
+        <tr id="not-found-message">
+          <td colspan="4">No results found. Check the filters.</th>
+        </tr>
+    </template>
+    <template id="template_results-table__tbody">
+      <tbody class="results-table-row">
+        <tr class="collapsible">
+        </tr>
+        <tr class="extras-row">
+          <td class="extra" colspan="4">
+            <div class="extraHTML"></div>
+            <div class="media">
+              <div class="media-container">
+                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__viewport">
+                    <img src="" />
+                    <video controls>
+                      <source src="" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="media-container__nav--right">></div>
+                </div>
+                <div class="media__name"></div>
+                <div class="media__counter"></div>
+            </div>
+            <div class="logwrapper">
+              <div class="logexpander"></div>
+              <div class="log"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </template>
+    <!-- END TEMPLATES -->
+    <div class="summary">
+      <div class="summary__data">
+        <h2>Summary</h2>
+        <div class="additional-summary prefix">
+        </div>
+        <p class="run-count">1 test took 00:01:20.</p>
+        <p class="filter">(Un)check the boxes to filter the results.</p>
+        <div class="summary__reload">
+          <div class="summary__reload__button hidden" onclick="location.reload()">
+            <div>There are still tests running. <br />Reload this page to get the latest results!</div>
+          </div>
+        </div>
+        <div class="summary__spacer"></div>
+        <div class="controls">
+          <div class="filters">
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" />
+            <span class="failed">1 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" disabled/>
+            <span class="passed">0 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <span class="xfailed">0 Expected failures,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <span class="xpassed">0 Unexpected passes,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <span class="error">0 Errors,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <span class="rerun">0 Reruns</span>
+          </div>
+          <div class="collapse">
+            <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
+          </div>
+        </div>
+      </div>
+      <div class="additional-summary summary">
+      </div>
+      <div class="additional-summary postfix">
+      </div>
+    </div>
+    <table id="results-table">
+      <thead id="results-table-head">
+        <tr>
+          <th class="sortable" data-column-type="result">Result</th>
+          <th class="sortable" data-column-type="testId">Test</th>
+          <th class="sortable" data-column-type="duration">Duration</th>
+          <th>Links</th>
+        </tr>
+      </thead>
+    </table>
+  </body>
+  <footer>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.13.5&#34;, &#34;Platform&#34;: &#34;Windows-11-10.0.22621-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.4.1&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;CI&#34;: &#34;true&#34;, &#34;BUILD_NUMBER&#34;: &#34;68&#34;, &#34;BUILD_ID&#34;: &#34;68&#34;, &#34;BUILD_URL&#34;: &#34;http://localhost:8080/job/testlocal/68/&#34;, &#34;NODE_NAME&#34;: &#34;built-in&#34;, &#34;JOB_NAME&#34;: &#34;testlocal&#34;, &#34;BUILD_TAG&#34;: &#34;jenkins-testlocal-68&#34;, &#34;EXECUTOR_NUMBER&#34;: &#34;0&#34;, &#34;JENKINS_URL&#34;: &#34;http://localhost:8080/&#34;, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.15.6-hotspot&#34;, &#34;WORKSPACE&#34;: &#34;C:\\Users\\RVM476\\AppData\\Local\\Jenkins\\.jenkins\\workspace\\testlocal&#34;}, &#34;tests&#34;: {&#34;tests/test_nigelec_prepaye.py::Test_Nigelec_Prepaye::test_navigation_nigelecprepaye&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;tests/test_nigelec_prepaye.py::Test_Nigelec_Prepaye::test_navigation_nigelecprepaye&#34;, &#34;duration&#34;: &#34;00:01:20&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;tests/test_nigelec_prepaye.py::Test_Nigelec_Prepaye::test_navigation_nigelecprepaye&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:01:20&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;self = &amp;lt;test_nigelec_prepaye.Test_Nigelec_Prepaye object at 0x0000019279883250&amp;gt;\ndriver = &amp;lt;selenium.webdriver.firefox.webdriver.WebDriver (session=&amp;quot;cfad9aea-d24d-4000-b32a-8e07dd041244&amp;quot;)&amp;gt;\nlogin = True\n\n    def test_navigation_nigelecprepaye(self, driver, login):\n        # Suppose qu&amp;#x27;on est d\u00e9j\u00e0 connect\u00e9 gr\u00e2ce au fixture `login`\n        # scroller le menu vertical vers le bas\n        menu = driver.find_element(By.CLASS_NAME, &amp;quot;nav-links&amp;quot;)\n        driver.execute_script(&amp;quot;arguments[0].scrollTop = arguments[0].scrollHeight&amp;quot;, menu)\n        # Clicker sur mise a disposition\n        click_on_sidebar(driver, menu=&amp;quot;Paiement&amp;quot;, sub=&amp;quot;Nigelec Prepay\u00e9&amp;quot;)\n        assert &amp;quot;/nigelecprepaye&amp;quot; in driver.current_url.lower()\n        time.sleep(5)\n        # Attendre que le bouton soit cliquable, puis cliquer\n        button1 = WebDriverWait(driver, 10).until(\n            EC.element_to_be_clickable((By.XPATH, &amp;quot;//button[normalize-space()=&amp;#x27;Recharger compteur&amp;#x27;]&amp;quot;))\n        )\n        button1.click()\n        time.sleep(5)\n    \n        driver.find_element(By.ID, &amp;quot;telClient&amp;quot;).send_keys(&amp;quot;99401994&amp;quot;)\n        time.sleep(3)\n        driver.find_element(By.ID, &amp;quot;telClientConfirm&amp;quot;).send_keys(&amp;quot;99401994&amp;quot;)\n        time.sleep(5)\n        driver.find_element(By.ID, &amp;quot;numCompteur&amp;quot;).send_keys(&amp;quot;54810216884&amp;quot;)\n        time.sleep(3)\n        driver.find_element(By.ID, &amp;quot;btnRechercheClient&amp;quot;).click()\n    \n    \n        # Attendre que le H5 soit pr\u00e9sent dans la page\n        time.sleep(3)\n        from selenium.common.exceptions import TimeoutException\n    \n        try:\n            # Attendre que le bouton soit visible et activ\u00e9\n&amp;gt;           button = WebDriverWait(driver, 20).until(\n                EC.element_to_be_clickable((By.XPATH, &amp;quot;//button[@id=&amp;#x27;submitBtn&amp;#x27; and normalize-space()=&amp;#x27;Valider&amp;#x27;]&amp;quot;))\n            )\n\ntests\\test_nigelec_prepaye.py:51: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n\nself = &amp;lt;selenium.webdriver.support.wait.WebDriverWait (session=&amp;quot;cfad9aea-d24d-4000-b32a-8e07dd041244&amp;quot;)&amp;gt;\nmethod = &amp;lt;function element_to_be_clickable.&amp;lt;locals&amp;gt;._predicate at 0x00000192798FA980&amp;gt;\nmessage = &amp;#x27;&amp;#x27;\n\n    def until(self, method: Callable[[D], Union[Literal[False], T]], message: str = &amp;quot;&amp;quot;) -&amp;gt; T:\n        &amp;quot;&amp;quot;&amp;quot;Wait until the method returns a value that is not False.\n    \n        Calls the method provided with the driver as an argument until the\n        return value does not evaluate to ``False``.\n    \n        Parameters:\n        -----------\n        method: callable(WebDriver)\n            - A callable object that takes a WebDriver instance as an argument.\n    \n        message: str\n            - Optional message for :exc:`TimeoutException`\n    \n        Return:\n        -------\n        object: T\n            - The result of the last call to `method`\n    \n        Raises:\n        -------\n        TimeoutException\n            - If &amp;#x27;method&amp;#x27; does not return a truthy value within the WebDriverWait\n            object&amp;#x27;s timeout\n    \n        Example:\n        --------\n        &amp;gt;&amp;gt;&amp;gt; from selenium.webdriver.common.by import By\n        &amp;gt;&amp;gt;&amp;gt; from selenium.webdriver.support.ui import WebDriverWait\n        &amp;gt;&amp;gt;&amp;gt; from selenium.webdriver.support import expected_conditions as EC\n    \n        # Wait until an element is visible on the page\n        &amp;gt;&amp;gt;&amp;gt; wait = WebDriverWait(driver, 10)\n        &amp;gt;&amp;gt;&amp;gt; element = wait.until(EC.visibility_of_element_located((By.ID, &amp;quot;exampleId&amp;quot;)))\n        &amp;gt;&amp;gt;&amp;gt; print(element.text)\n        &amp;quot;&amp;quot;&amp;quot;\n        screen = None\n        stacktrace = None\n    \n        end_time = time.monotonic() + self._timeout\n        while True:\n            try:\n                value = method(self._driver)\n                if value:\n                    return value\n            except self._ignored_exceptions as exc:\n                screen = getattr(exc, &amp;quot;screen&amp;quot;, None)\n                stacktrace = getattr(exc, &amp;quot;stacktrace&amp;quot;, None)\n            if time.monotonic() &amp;gt; end_time:\n                break\n            time.sleep(self._poll)\n&amp;gt;       raise TimeoutException(message, screen, stacktrace)\nE       selenium.common.exceptions.TimeoutException: Message:\n\nvenv\\Lib\\site-packages\\selenium\\webdriver\\support\\wait.py:138: TimeoutException\n\nDuring handling of the above exception, another exception occurred:\n\nself = &amp;lt;test_nigelec_prepaye.Test_Nigelec_Prepaye object at 0x0000019279883250&amp;gt;\ndriver = &amp;lt;selenium.webdriver.firefox.webdriver.WebDriver (session=&amp;quot;cfad9aea-d24d-4000-b32a-8e07dd041244&amp;quot;)&amp;gt;\nlogin = True\n\n    def test_navigation_nigelecprepaye(self, driver, login):\n        # Suppose qu&amp;#x27;on est d\u00e9j\u00e0 connect\u00e9 gr\u00e2ce au fixture `login`\n        # scroller le menu vertical vers le bas\n        menu = driver.find_element(By.CLASS_NAME, &amp;quot;nav-links&amp;quot;)\n        driver.execute_script(&amp;quot;arguments[0].scrollTop = arguments[0].scrollHeight&amp;quot;, menu)\n        # Clicker sur mise a disposition\n        click_on_sidebar(driver, menu=&amp;quot;Paiement&amp;quot;, sub=&amp;quot;Nigelec Prepay\u00e9&amp;quot;)\n        assert &amp;quot;/nigelecprepaye&amp;quot; in driver.current_url.lower()\n        time.sleep(5)\n        # Attendre que le bouton soit cliquable, puis cliquer\n        button1 = WebDriverWait(driver, 10).until(\n            EC.element_to_be_clickable((By.XPATH, &amp;quot;//button[normalize-space()=&amp;#x27;Recharger compteur&amp;#x27;]&amp;quot;))\n        )\n        button1.click()\n        time.sleep(5)\n    \n        driver.find_element(By.ID, &amp;quot;telClient&amp;quot;).send_keys(&amp;quot;99401994&amp;quot;)\n        time.sleep(3)\n        driver.find_element(By.ID, &amp;quot;telClientConfirm&amp;quot;).send_keys(&amp;quot;99401994&amp;quot;)\n        time.sleep(5)\n        driver.find_element(By.ID, &amp;quot;numCompteur&amp;quot;).send_keys(&amp;quot;54810216884&amp;quot;)\n        time.sleep(3)\n        driver.find_element(By.ID, &amp;quot;btnRechercheClient&amp;quot;).click()\n    \n    \n        # Attendre que le H5 soit pr\u00e9sent dans la page\n        time.sleep(3)\n        from selenium.common.exceptions import TimeoutException\n    \n        try:\n            # Attendre que le bouton soit visible et activ\u00e9\n            button = WebDriverWait(driver, 20).until(\n                EC.element_to_be_clickable((By.XPATH, &amp;quot;//button[@id=&amp;#x27;submitBtn&amp;#x27; and normalize-space()=&amp;#x27;Valider&amp;#x27;]&amp;quot;))\n            )\n            print(&amp;quot;\u2705 Bouton trouv\u00e9, on clique.&amp;quot;)\n            button.click()\n        except TimeoutException:\n            print(&amp;quot;\u274c Le bouton &amp;#x27;Valider&amp;#x27; avec ID &amp;#x27;submitBtn&amp;#x27; n\u2019a pas \u00e9t\u00e9 trouv\u00e9 ou n\u2019est pas cliquable.&amp;quot;)\n            print(driver.page_source)  # Debug HTML\n&amp;gt;           assert False, &amp;quot;Le bouton Valider n\u2019est pas accessible&amp;quot;\nE           AssertionError: Le bouton Valider n\u2019est pas accessible\nE           assert False\n\ntests\\test_nigelec_prepaye.py:59: AssertionError\n\n---------------------------- Captured stdout setup -----------------------------\n\u2705 Connexion r\u00e9ussie, URL actuelle : http://63.34.177.221:8082/agent/index\n\n----------------------------- Captured stdout call -----------------------------\n\u274c Le bouton &amp;#x27;Valider&amp;#x27; avec ID &amp;#x27;submitBtn&amp;#x27; n\u2019a pas \u00e9t\u00e9 trouv\u00e9 ou n\u2019est pas cliquable.\n&amp;lt;html lang=&amp;quot;fr&amp;quot; xmlns=&amp;quot;http://www.w3.org/1999/xhtml&amp;quot;&amp;gt;&amp;lt;head&amp;gt;\n    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;\n    &amp;lt;meta content=&amp;quot;${_csrf.token}&amp;quot; name=&amp;quot;_csrf&amp;quot;&amp;gt;\n    &amp;lt;!-- default header name is X-CSRF-TOKEN --&amp;gt;\n    &amp;lt;meta content=&amp;quot;${_csrf.headerName}&amp;quot; name=&amp;quot;_csrf_header&amp;quot;&amp;gt;\n    &amp;lt;meta content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot; name=&amp;quot;viewport&amp;quot;&amp;gt;\n    \n    &amp;lt;title&amp;gt;NITA TRANSFERT D&amp;#x27;ARGENT&amp;lt;/title&amp;gt;\n&amp;lt;!--    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.min.css&amp;quot;&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/webjars/select2/4.0.13/css/select2.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/bootstrap.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;amp;lt;!&amp;amp;ndash; Icon Font Stylesheet &amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css&amp;quot; integrity=&amp;quot;sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==&amp;quot; crossorigin=&amp;quot;anonymous&amp;quot; referrerpolicy=&amp;quot;no-referrer&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css/agent/azia.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/default.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/agent/style.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/agent/form.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;amp;display=swap&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/stylesMenuRight.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css/select.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;\n\n&amp;lt;!--    &amp;amp;lt;!&amp;amp;ndash; Section pour ajouter les hover sur les sections des index &amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;link href=&amp;quot;/assets/css/home.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;/&amp;gt;--&amp;gt;\n\n\n\n\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css&amp;quot; integrity=&amp;quot;sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==&amp;quot; crossorigin=&amp;quot;anonymous&amp;quot; referrerpolicy=&amp;quot;no-referrer&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;https://fonts.googleapis.com/icon?family=Material+Icons&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css&amp;quot;&amp;gt;\n    &amp;lt;!-- BEGIN: Page Level CSS--&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css-new-design/bootstrap.min.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;&amp;gt;\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css&amp;quot;&amp;gt;\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.17/dist/css/splide.min.css&amp;quot;&amp;gt;\n    &amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/lity/2.4.1/lity.min.css&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css-new-design/style.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css-new-design/custom/custom_2.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css-new-design/SidebarTest28.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot; type=&amp;quot;text/css&amp;quot;&amp;gt;\n    &amp;lt;link href=&amp;quot;/assets/css/dateExpirer.css&amp;quot; rel=&amp;quot;stylesheet&amp;quot;&amp;gt;\n\n    &amp;lt;!-- END: Page Level CSS--&amp;gt;\n\n\n\n    &amp;lt;link rel=&amp;quot;shortcut icon&amp;quot; href=&amp;quot;/assets/images-new-design/icons/favicon.ico&amp;quot;&amp;gt;\n\n&amp;lt;style&amp;gt;.swal2-popup.swal2-toast{box-sizing:border-box;grid-column:1/4 !important;grid-row:1/4 !important;grid-template-columns:min-content auto min-content;padding:1em;overflow-y:hidden;background:#fff;box-shadow:0 0 1px rgba(0,0,0,.075),0 1px 2px rgba(0,0,0,.075),1px 2px 4px rgba(0,0,0,.075),1px 3px 8px rgba(0,0,0,.075),2px 4px 16px rgba(0,0,0,.075);pointer-events:all}.swal2-popup.swal2-toast&amp;gt;*{grid-column:2}.swal2-popup.swal2-toast .swal2-title{margin:.5em 1em;padding:0;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-loading{justify-content:center}.swal2-popup.swal2-toast .swal2-input{height:2em;margin:.5em;font-size:1em}.swal2-popup.swal2-toast .swal2-validation-message{font-size:1em}.swal2-popup.swal2-toast .swal2-footer{margin:.5em 0 0;padding:.5em 0 0;font-size:.8em}.swal2-popup.swal2-toast .swal2-close{grid-column:3/3;grid-row:1/99;align-self:center;width:.8em;height:.8em;margin:0;font-size:2em}.swal2-popup.swal2-toast .swal2-html-container{margin:.5em 1em;padding:0;overflow:initial;font-size:1em;text-align:initial}.swal2-popup.swal2-toast .swal2-html-container:empty{padding:0}.swal2-popup.swal2-toast .swal2-loader{grid-column:1;grid-row:1/99;align-self:center;width:2em;height:2em;margin:.25em}.swal2-popup.swal2-toast .swal2-icon{grid-column:1;grid-row:1/99;align-self:center;width:2em;min-width:2em;height:2em;margin:0 .5em 0 0}.swal2-popup.swal2-toast .swal2-icon .swal2-icon-content{display:flex;align-items:center;font-size:1.8em;font-weight:bold}.swal2-popup.swal2-toast .swal2-icon.swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line]{top:.875em;width:1.375em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=left]{left:.3125em}.swal2-popup.swal2-toast .swal2-icon.swal2-error [class^=swal2-x-mark-line][class$=right]{right:.3125em}.swal2-popup.swal2-toast .swal2-actions{justify-content:flex-start;height:auto;margin:0;margin-top:.5em;padding:0 .5em}.swal2-popup.swal2-toast .swal2-styled{margin:.25em .5em;padding:.4em .6em;font-size:1em}.swal2-popup.swal2-toast .swal2-success{border-color:#a5dc86}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line]{position:absolute;width:1.6em;height:3em;border-radius:50%}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.8em;left:-0.5em;transform:rotate(-45deg);transform-origin:2em 2em;border-radius:4em 0 0 4em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.25em;left:.9375em;transform-origin:0 1.5em;border-radius:0 4em 4em 0}.swal2-popup.swal2-toast .swal2-success .swal2-success-ring{width:2em;height:2em}.swal2-popup.swal2-toast .swal2-success .swal2-success-fix{top:0;left:.4375em;width:.4375em;height:2.6875em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line]{height:.3125em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=tip]{top:1.125em;left:.1875em;width:.75em}.swal2-popup.swal2-toast .swal2-success [class^=swal2-success-line][class$=long]{top:.9375em;right:.1875em;width:1.375em}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-toast-animate-success-line-tip .75s}.swal2-popup.swal2-toast .swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-toast-animate-success-line-long .75s}.swal2-popup.swal2-toast.swal2-show{animation:swal2-toast-show .5s}.swal2-popup.swal2-toast.swal2-hide{animation:swal2-toast-hide .1s forwards}div:where(.swal2-container){display:grid;position:fixed;z-index:1060;inset:0;box-sizing:border-box;grid-template-areas:&amp;quot;top-start     top            top-end&amp;quot; &amp;quot;center-start  center         center-end&amp;quot; &amp;quot;bottom-start  bottom-center  bottom-end&amp;quot;;grid-template-rows:minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);height:100%;padding:.625em;overflow-x:hidden;transition:background-color .1s;-webkit-overflow-scrolling:touch}div:where(.swal2-container).swal2-backdrop-show,div:where(.swal2-container).swal2-noanimation{background:rgba(0,0,0,.4)}div:where(.swal2-container).swal2-backdrop-hide{background:rgba(0,0,0,0) !important}div:where(.swal2-container).swal2-top-start,div:where(.swal2-container).swal2-center-start,div:where(.swal2-container).swal2-bottom-start{grid-template-columns:minmax(0, 1fr) auto auto}div:where(.swal2-container).swal2-top,div:where(.swal2-container).swal2-center,div:where(.swal2-container).swal2-bottom{grid-template-columns:auto minmax(0, 1fr) auto}div:where(.swal2-container).swal2-top-end,div:where(.swal2-container).swal2-center-end,div:where(.swal2-container).swal2-bottom-end{grid-template-columns:auto auto minmax(0, 1fr)}div:where(.swal2-container).swal2-top-start&amp;gt;.swal2-popup{align-self:start}div:where(.swal2-container).swal2-top&amp;gt;.swal2-popup{grid-column:2;place-self:start center}div:where(.swal2-container).swal2-top-end&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-top-right&amp;gt;.swal2-popup{grid-column:3;place-self:start end}div:where(.swal2-container).swal2-center-start&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-center-left&amp;gt;.swal2-popup{grid-row:2;align-self:center}div:where(.swal2-container).swal2-center&amp;gt;.swal2-popup{grid-column:2;grid-row:2;place-self:center center}div:where(.swal2-container).swal2-center-end&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-center-right&amp;gt;.swal2-popup{grid-column:3;grid-row:2;place-self:center end}div:where(.swal2-container).swal2-bottom-start&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-bottom-left&amp;gt;.swal2-popup{grid-column:1;grid-row:3;align-self:end}div:where(.swal2-container).swal2-bottom&amp;gt;.swal2-popup{grid-column:2;grid-row:3;place-self:end center}div:where(.swal2-container).swal2-bottom-end&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-bottom-right&amp;gt;.swal2-popup{grid-column:3;grid-row:3;place-self:end end}div:where(.swal2-container).swal2-grow-row&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen&amp;gt;.swal2-popup{grid-column:1/4;width:100%}div:where(.swal2-container).swal2-grow-column&amp;gt;.swal2-popup,div:where(.swal2-container).swal2-grow-fullscreen&amp;gt;.swal2-popup{grid-row:1/4;align-self:stretch}div:where(.swal2-container).swal2-no-transition{transition:none !important}div:where(.swal2-container) div:where(.swal2-popup){display:none;position:relative;box-sizing:border-box;grid-template-columns:minmax(0, 100%);width:32em;max-width:100%;padding:0 0 1.25em;border:none;border-radius:5px;background:#fff;color:#545454;font-family:inherit;font-size:1rem}div:where(.swal2-container) div:where(.swal2-popup):focus{outline:none}div:where(.swal2-container) div:where(.swal2-popup).swal2-loading{overflow-y:hidden}div:where(.swal2-container) h2:where(.swal2-title){position:relative;max-width:100%;margin:0;padding:.8em 1em 0;color:inherit;font-size:1.875em;font-weight:600;text-align:center;text-transform:none;word-wrap:break-word}div:where(.swal2-container) div:where(.swal2-actions){display:flex;z-index:1;box-sizing:border-box;flex-wrap:wrap;align-items:center;justify-content:center;width:auto;margin:1.25em auto 0;padding:0}div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled[disabled]{opacity:.4}div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled:hover{background-image:linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1))}div:where(.swal2-container) div:where(.swal2-actions):not(.swal2-loading) .swal2-styled:active{background-image:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2))}div:where(.swal2-container) div:where(.swal2-loader){display:none;align-items:center;justify-content:center;width:2.2em;height:2.2em;margin:0 1.875em;animation:swal2-rotate-loading 1.5s linear 0s infinite normal;border-width:.25em;border-style:solid;border-radius:100%;border-color:#2778c4 rgba(0,0,0,0) #2778c4 rgba(0,0,0,0)}div:where(.swal2-container) button:where(.swal2-styled){margin:.3125em;padding:.625em 1.1em;transition:box-shadow .1s;box-shadow:0 0 0 3px rgba(0,0,0,0);font-weight:500}div:where(.swal2-container) button:where(.swal2-styled):not([disabled]){cursor:pointer}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm){border:0;border-radius:.25em;background:initial;background-color:#7066e0;color:#fff;font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):focus-visible{box-shadow:0 0 0 3px rgba(112,102,224,.5)}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny){border:0;border-radius:.25em;background:initial;background-color:#dc3741;color:#fff;font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-deny):focus-visible{box-shadow:0 0 0 3px rgba(220,55,65,.5)}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel){border:0;border-radius:.25em;background:initial;background-color:#6e7881;color:#fff;font-size:1em}div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):focus-visible{box-shadow:0 0 0 3px rgba(110,120,129,.5)}div:where(.swal2-container) button:where(.swal2-styled).swal2-default-outline:focus-visible{box-shadow:0 0 0 3px rgba(100,150,200,.5)}div:where(.swal2-container) button:where(.swal2-styled):focus-visible{outline:none}div:where(.swal2-container) button:where(.swal2-styled)::-moz-focus-inner{border:0}div:where(.swal2-container) div:where(.swal2-footer){margin:1em 0 0;padding:1em 1em 0;border-top:1px solid #eee;color:inherit;font-size:1em;text-align:center}div:where(.swal2-container) .swal2-timer-progress-bar-container{position:absolute;right:0;bottom:0;left:0;grid-column:auto !important;overflow:hidden;border-bottom-right-radius:5px;border-bottom-left-radius:5px}div:where(.swal2-container) div:where(.swal2-timer-progress-bar){width:100%;height:.25em;background:rgba(0,0,0,.2)}div:where(.swal2-container) img:where(.swal2-image){max-width:100%;margin:2em auto 1em}div:where(.swal2-container) button:where(.swal2-close){z-index:2;align-items:center;justify-content:center;width:1.2em;height:1.2em;margin-top:0;margin-right:0;margin-bottom:-1.2em;padding:0;overflow:hidden;transition:color .1s,box-shadow .1s;border:none;border-radius:5px;background:rgba(0,0,0,0);color:#ccc;font-family:monospace;font-size:2.5em;cursor:pointer;justify-self:end}div:where(.swal2-container) button:where(.swal2-close):hover{transform:none;background:rgba(0,0,0,0);color:#f27474}div:where(.swal2-container) button:where(.swal2-close):focus-visible{outline:none;box-shadow:inset 0 0 0 3px rgba(100,150,200,.5)}div:where(.swal2-container) button:where(.swal2-close)::-moz-focus-inner{border:0}div:where(.swal2-container) .swal2-html-container{z-index:1;justify-content:center;margin:0;padding:1em 1.6em .3em;overflow:auto;color:inherit;font-size:1.125em;font-weight:normal;line-height:normal;text-align:center;word-wrap:break-word;word-break:break-word}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea),div:where(.swal2-container) select:where(.swal2-select),div:where(.swal2-container) div:where(.swal2-radio),div:where(.swal2-container) label:where(.swal2-checkbox){margin:1em 2em 3px}div:where(.swal2-container) input:where(.swal2-input),div:where(.swal2-container) input:where(.swal2-file),div:where(.swal2-container) textarea:where(.swal2-textarea){box-sizing:border-box;width:auto;transition:border-color .1s,box-shadow .1s;border:1px solid #d9d9d9;border-radius:.1875em;background:rgba(0,0,0,0);box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px rgba(0,0,0,0);color:inherit;font-size:1.125em}div:where(.swal2-container) input:where(.swal2-input).swal2-inputerror,div:where(.swal2-container) input:where(.swal2-file).swal2-inputerror,div:where(.swal2-container) textarea:where(.swal2-textarea).swal2-inputerror{border-color:#f27474 !important;box-shadow:0 0 2px #f27474 !important}div:where(.swal2-container) input:where(.swal2-input):focus,div:where(.swal2-container) input:where(.swal2-file):focus,div:where(.swal2-container) textarea:where(.swal2-textarea):focus{border:1px solid #b4dbed;outline:none;box-shadow:inset 0 1px 1px rgba(0,0,0,.06),0 0 0 3px rgba(100,150,200,.5)}div:where(.swal2-container) input:where(.swal2-input)::placeholder,div:where(.swal2-container) input:where(.swal2-file)::placeholder,div:where(.swal2-container) textarea:where(.swal2-textarea)::placeholder{color:#ccc}div:where(.swal2-container) .swal2-range{margin:1em 2em 3px;background:#fff}div:where(.swal2-container) .swal2-range input{width:80%}div:where(.swal2-container) .swal2-range output{width:20%;color:inherit;font-weight:600;text-align:center}div:where(.swal2-container) .swal2-range input,div:where(.swal2-container) .swal2-range output{height:2.625em;padding:0;font-size:1.125em;line-height:2.625em}div:where(.swal2-container) .swal2-input{height:2.625em;padding:0 .75em}div:where(.swal2-container) .swal2-file{width:75%;margin-right:auto;margin-left:auto;background:rgba(0,0,0,0);font-size:1.125em}div:where(.swal2-container) .swal2-textarea{height:6.75em;padding:.75em}div:where(.swal2-container) .swal2-select{min-width:50%;max-width:100%;padding:.375em .625em;background:rgba(0,0,0,0);color:inherit;font-size:1.125em}div:where(.swal2-container) .swal2-radio,div:where(.swal2-container) .swal2-checkbox{align-items:center;justify-content:center;background:#fff;color:inherit}div:where(.swal2-container) .swal2-radio label,div:where(.swal2-container) .swal2-checkbox label{margin:0 .6em;font-size:1.125em}div:where(.swal2-container) .swal2-radio input,div:where(.swal2-container) .swal2-checkbox input{flex-shrink:0;margin:0 .4em}div:where(.swal2-container) label:where(.swal2-input-label){display:flex;justify-content:center;margin:1em auto 0}div:where(.swal2-container) div:where(.swal2-validation-message){align-items:center;justify-content:center;margin:1em 0 0;padding:.625em;overflow:hidden;background:#f0f0f0;color:#666;font-size:1em;font-weight:300}div:where(.swal2-container) div:where(.swal2-validation-message)::before{content:&amp;quot;!&amp;quot;;display:inline-block;width:1.5em;min-width:1.5em;height:1.5em;margin:0 .625em;border-radius:50%;background-color:#f27474;color:#fff;font-weight:600;line-height:1.5em;text-align:center}div:where(.swal2-container) .swal2-progress-steps{flex-wrap:wrap;align-items:center;max-width:100%;margin:1.25em auto;padding:0;background:rgba(0,0,0,0);font-weight:600}div:where(.swal2-container) .swal2-progress-steps li{display:inline-block;position:relative}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step{z-index:20;flex-shrink:0;width:2em;height:2em;border-radius:2em;background:#2778c4;color:#fff;line-height:2em;text-align:center}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step{background:#2778c4}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step{background:#add8e6;color:#fff}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step.swal2-active-progress-step~.swal2-progress-step-line{background:#add8e6}div:where(.swal2-container) .swal2-progress-steps .swal2-progress-step-line{z-index:10;flex-shrink:0;width:2.5em;height:.4em;margin:0 -1px;background:#2778c4}div:where(.swal2-icon){position:relative;box-sizing:content-box;justify-content:center;width:5em;height:5em;margin:2.5em auto .6em;border:0.25em solid rgba(0,0,0,0);border-radius:50%;border-color:#000;font-family:inherit;line-height:5em;cursor:default;user-select:none}div:where(.swal2-icon) .swal2-icon-content{display:flex;align-items:center;font-size:3.75em}div:where(.swal2-icon).swal2-error{border-color:#f27474;color:#f27474}div:where(.swal2-icon).swal2-error .swal2-x-mark{position:relative;flex-grow:1}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line]{display:block;position:absolute;top:2.3125em;width:2.9375em;height:.3125em;border-radius:.125em;background-color:#f27474}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=left]{left:1.0625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-error [class^=swal2-x-mark-line][class$=right]{right:1em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-error.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-error.swal2-icon-show .swal2-x-mark{animation:swal2-animate-error-x-mark .5s}div:where(.swal2-icon).swal2-warning{border-color:#facea8;color:#f8bb86}div:where(.swal2-icon).swal2-warning.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-warning.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .5s}div:where(.swal2-icon).swal2-info{border-color:#9de0f6;color:#3fc3ee}div:where(.swal2-icon).swal2-info.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-info.swal2-icon-show .swal2-icon-content{animation:swal2-animate-i-mark .8s}div:where(.swal2-icon).swal2-question{border-color:#c9dae1;color:#87adbd}div:where(.swal2-icon).swal2-question.swal2-icon-show{animation:swal2-animate-error-icon .5s}div:where(.swal2-icon).swal2-question.swal2-icon-show .swal2-icon-content{animation:swal2-animate-question-mark .8s}div:where(.swal2-icon).swal2-success{border-color:#a5dc86;color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line]{position:absolute;width:3.75em;height:7.5em;border-radius:50%}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=left]{top:-0.4375em;left:-2.0635em;transform:rotate(-45deg);transform-origin:3.75em 3.75em;border-radius:7.5em 0 0 7.5em}div:where(.swal2-icon).swal2-success [class^=swal2-success-circular-line][class$=right]{top:-0.6875em;left:1.875em;transform:rotate(-45deg);transform-origin:0 3.75em;border-radius:0 7.5em 7.5em 0}div:where(.swal2-icon).swal2-success .swal2-success-ring{position:absolute;z-index:2;top:-0.25em;left:-0.25em;box-sizing:content-box;width:100%;height:100%;border:.25em solid rgba(165,220,134,.3);border-radius:50%}div:where(.swal2-icon).swal2-success .swal2-success-fix{position:absolute;z-index:1;top:.5em;left:1.625em;width:.4375em;height:5.625em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line]{display:block;position:absolute;z-index:2;height:.3125em;border-radius:.125em;background-color:#a5dc86}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=tip]{top:2.875em;left:.8125em;width:1.5625em;transform:rotate(45deg)}div:where(.swal2-icon).swal2-success [class^=swal2-success-line][class$=long]{top:2.375em;right:.5em;width:2.9375em;transform:rotate(-45deg)}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-tip{animation:swal2-animate-success-line-tip .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-line-long{animation:swal2-animate-success-line-long .75s}div:where(.swal2-icon).swal2-success.swal2-icon-show .swal2-success-circular-line-right{animation:swal2-rotate-success-circular-line 4.25s ease-in}[class^=swal2]{-webkit-tap-highlight-color:rgba(0,0,0,0)}.swal2-show{animation:swal2-show .3s}.swal2-hide{animation:swal2-hide .15s forwards}.swal2-noanimation{transition:none}.swal2-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}.swal2-rtl .swal2-close{margin-right:initial;margin-left:0}.swal2-rtl .swal2-timer-progress-bar{right:0;left:auto}@keyframes swal2-toast-show{0%{transform:translateY(-0.625em) rotateZ(2deg)}33%{transform:translateY(0) rotateZ(-2deg)}66%{transform:translateY(0.3125em) rotateZ(2deg)}100%{transform:translateY(0) rotateZ(0deg)}}@keyframes swal2-toast-hide{100%{transform:rotateZ(1deg);opacity:0}}@keyframes swal2-toast-animate-success-line-tip{0%{top:.5625em;left:.0625em;width:0}54%{top:.125em;left:.125em;width:0}70%{top:.625em;left:-0.25em;width:1.625em}84%{top:1.0625em;left:.75em;width:.5em}100%{top:1.125em;left:.1875em;width:.75em}}@keyframes swal2-toast-animate-success-line-long{0%{top:1.625em;right:1.375em;width:0}65%{top:1.25em;right:.9375em;width:0}84%{top:.9375em;right:0;width:1.125em}100%{top:.9375em;right:.1875em;width:1.375em}}@keyframes swal2-show{0%{transform:scale(0.7)}45%{transform:scale(1.05)}80%{transform:scale(0.95)}100%{transform:scale(1)}}@keyframes swal2-hide{0%{transform:scale(1);opacity:1}100%{transform:scale(0.5);opacity:0}}@keyframes swal2-animate-success-line-tip{0%{top:1.1875em;left:.0625em;width:0}54%{top:1.0625em;left:.125em;width:0}70%{top:2.1875em;left:-0.375em;width:3.125em}84%{top:3em;left:1.3125em;width:1.0625em}100%{top:2.8125em;left:.8125em;width:1.5625em}}@keyframes swal2-animate-success-line-long{0%{top:3.375em;right:2.875em;width:0}65%{top:3.375em;right:2.875em;width:0}84%{top:2.1875em;right:0;width:3.4375em}100%{top:2.375em;right:.5em;width:2.9375em}}@keyframes swal2-rotate-success-circular-line{0%{transform:rotate(-45deg)}5%{transform:rotate(-45deg)}12%{transform:rotate(-405deg)}100%{transform:rotate(-405deg)}}@keyframes swal2-animate-error-x-mark{0%{margin-top:1.625em;transform:scale(0.4);opacity:0}50%{margin-top:1.625em;transform:scale(0.4);opacity:0}80%{margin-top:-0.375em;transform:scale(1.15)}100%{margin-top:0;transform:scale(1);opacity:1}}@keyframes swal2-animate-error-icon{0%{transform:rotateX(100deg);opacity:0}100%{transform:rotateX(0deg);opacity:1}}@keyframes swal2-rotate-loading{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes swal2-animate-question-mark{0%{transform:rotateY(-360deg)}100%{transform:rotateY(0)}}@keyframes swal2-animate-i-mark{0%{transform:rotateZ(45deg);opacity:0}25%{transform:rotateZ(-25deg);opacity:.4}50%{transform:rotateZ(15deg);opacity:.8}75%{transform:rotateZ(-5deg);opacity:1}100%{transform:rotateX(0);opacity:1}}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow:hidden}body.swal2-height-auto{height:auto !important}body.swal2-no-backdrop .swal2-container{background-color:rgba(0,0,0,0) !important;pointer-events:none}body.swal2-no-backdrop .swal2-container .swal2-popup{pointer-events:all}body.swal2-no-backdrop .swal2-container .swal2-modal{box-shadow:0 0 10px rgba(0,0,0,.4)}@media print{body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown){overflow-y:scroll !important}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown)&amp;gt;[aria-hidden=true]{display:none}body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) .swal2-container{position:static !important}}body.swal2-toast-shown .swal2-container{box-sizing:border-box;width:360px;max-width:100%;background-color:rgba(0,0,0,0);pointer-events:none}body.swal2-toast-shown .swal2-container.swal2-top{inset:0 auto auto 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-top-end,body.swal2-toast-shown .swal2-container.swal2-top-right{inset:0 0 auto auto}body.swal2-toast-shown .swal2-container.swal2-top-start,body.swal2-toast-shown .swal2-container.swal2-top-left{inset:0 auto auto 0}body.swal2-toast-shown .swal2-container.swal2-center-start,body.swal2-toast-shown .swal2-container.swal2-center-left{inset:50% auto auto 0;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-center{inset:50% auto auto 50%;transform:translate(-50%, -50%)}body.swal2-toast-shown .swal2-container.swal2-center-end,body.swal2-toast-shown .swal2-container.swal2-center-right{inset:50% 0 auto auto;transform:translateY(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-start,body.swal2-toast-shown .swal2-container.swal2-bottom-left{inset:auto auto 0 0}body.swal2-toast-shown .swal2-container.swal2-bottom{inset:auto auto 0 50%;transform:translateX(-50%)}body.swal2-toast-shown .swal2-container.swal2-bottom-end,body.swal2-toast-shown .swal2-container.swal2-bottom-right{inset:auto 0 0 auto}&amp;lt;/style&amp;gt;&amp;lt;/head&amp;gt;\n\n&amp;lt;body style=&amp;quot;overflow: hidden; padding-right: 0px;&amp;quot; class=&amp;quot;modal-open&amp;quot;&amp;gt;\n\n&amp;lt;!--&amp;lt;div class=&amp;quot;body-wrapper&amp;quot;&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;amp;lt;!&amp;amp;ndash;  Navbar Start &amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;section th:insert=&amp;quot;~{agent/includes/navbar :: navbar}&amp;quot;&amp;gt;&amp;lt;/section&amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;amp;lt;!&amp;amp;ndash;  Navbar End &amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;main&amp;gt;--&amp;gt;\n&amp;lt;!--        &amp;amp;lt;!&amp;amp;ndash;  Content Start&amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n&amp;lt;!--        &amp;lt;section layout:fragment=&amp;quot;content&amp;quot;&amp;gt;&amp;lt;/section&amp;gt;--&amp;gt;\n&amp;lt;!--        &amp;amp;lt;!&amp;amp;ndash;  Content End&amp;amp;ndash;&amp;amp;gt;--&amp;gt;\n&amp;lt;!--    &amp;lt;/main&amp;gt;--&amp;gt;\n\n&amp;lt;!--&amp;lt;/div&amp;gt;--&amp;gt;\n\n\n\n\n\n\n\n\n\n&amp;lt;div id=&amp;quot;app&amp;quot;&amp;gt;\n    &amp;lt;aside class=&amp;quot;sidebar d-lg-flex d-none&amp;quot;&amp;gt;\n    &amp;lt;div class=&amp;quot;logo&amp;quot;&amp;gt;\n        &amp;lt;a href=&amp;quot;/agent/index&amp;quot;&amp;gt;\n            &amp;lt;img class=&amp;quot;d-flex justify-content-center mx-auto w-100&amp;quot; src=&amp;quot;/../assets/images/LOGO-NITA-PNG.png&amp;quot; alt=&amp;quot;nita logo&amp;quot;&amp;gt;\n        &amp;lt;/a&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n    &amp;lt;ul class=&amp;quot;nav-links&amp;quot;&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/index&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-house&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Tableau de bord&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n\n        &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Envois&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/envoi&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Effectuer un envoi\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/modificationEnvoiGenerale&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Modif. g\u00e9nerale d&amp;#x27;envoi\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/remboursementAnnulation&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-hourglass-start sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Rembour. D&amp;#x27;annulation\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/remboursementMynita&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-wallet sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Rembour. MYNITA\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/envoi&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-money-bill-transfer sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Envoi moneygram\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n            &amp;lt;/ul&amp;gt;\n        &amp;lt;/li&amp;gt;\n\n        &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Retrait&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/retrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-money-bill-wave sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Effectuer\n                        un retrait&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/retrait&amp;quot;&amp;gt; &amp;lt;i class=&amp;quot;fa fa-money-check-dollar sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait moneygram&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/cnss/retraitCnss&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-person-arrow-up-from-line sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait CNSS&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/careni/retraitCareni&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-person-booth sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait CARENI&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n            &amp;lt;/ul&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/miseADispositionAgent&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fas fa-people-arrows&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Mise \u00e0 disposition&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/encaissementsAgent&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fas fa-money-bill-trend-up&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Encaissement attribution&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/scannerQrCodeCardMyNita&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-qrcode&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;QRCode Scan MyNita Card&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa fa-credit-card-alt&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/rechargeMyNita&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Recharge MyNita\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/facture/nigelecFacture&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nigelec Postpay\u00e9\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li class=&amp;quot;active&amp;quot;&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/nigelecPrepaye&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nigelec Prepay\u00e9\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/facture/NdeFacture&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;NDE\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/airtime&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Shap Shap\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/airtimeCtoS&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-phone-alt sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Recharge C TO C(STOCK)\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxe&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-hand-holding-dollar sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Taxes Ville de Niamey\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxePermis&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-drivers-license sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Permis Ville de Niamey\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxeTaxi&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-taxi sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Taxis Ville de Niamey\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/nitaschool&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-graduation-cap sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nita School\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/energiePlus&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-solid fa-bolt sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Energie Plus\n                    &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n            &amp;lt;/ul&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/AchatEnLigne&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa fa-globe-africa&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement en ligne&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/oriba&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa fa-charging-station&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement oriba&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/verssementPartenaire&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-person-booth&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Versement partenaires&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n\n        &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Historiques&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                        Envois&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/envoi/historiqueRejetAnnulationEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-not-equal sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;His. Rejet d&amp;#x27;annulation &amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRetrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                        Retraits&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueDecaissementAgent&amp;quot;&amp;gt; &amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Mise \u00e0 disposition&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRechargeMyNita&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Recharge Mynita&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementNigelec&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Nigelec Postpaye&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementNigelecPrepaye&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Nigelec Prepaye&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementSeen&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Seen Postpay\u00e9&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueAirtime&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                        Airtime&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxe/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Taxe Ville de Niamey&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxePermis/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Permis Ville de Niamey&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxeTaxi/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Taxi Ville de Niamey&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/historiqueEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Envois Moneygram&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/historiqueRetrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Retraits Moneygram&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/cnss/historiquePaiementCnss&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement CNSS&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/careni/historiquePaiementCareni&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement CARENI&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiement&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement Achat&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueNitaSchool&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique NitaSchool&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n\n&amp;lt;!--                &amp;lt;li th:classappend=&amp;quot;${historiqueEnvoiGroupes}&amp;quot;&amp;gt;--&amp;gt;\n&amp;lt;!--                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; th:href=&amp;quot;@{/agent/historiqueEnvoiGroupes}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Envoi Group\u00e9&amp;lt;/a&amp;gt;--&amp;gt;\n&amp;lt;!--                &amp;lt;/li&amp;gt;--&amp;gt;\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRetraitGroupe&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Retrait Group\u00e9&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueVersementPartenaire&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa-solid fa-table-list sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historiques versements&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n\n                &amp;lt;li&amp;gt;\n                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueTransaction&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Globale&amp;lt;/a&amp;gt;\n                &amp;lt;/li&amp;gt;\n            &amp;lt;/ul&amp;gt;\n        &amp;lt;/li&amp;gt;\n\n        &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n            &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/cloture&amp;quot;&amp;gt;\n                &amp;lt;i class=&amp;quot;fa-solid fa-shop-slash&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Cloturer&amp;lt;/span&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/li&amp;gt;\n    &amp;lt;/ul&amp;gt;\n\n&amp;lt;/aside&amp;gt;\n    &amp;lt;aside id=&amp;quot;main-mobile-sidebar&amp;quot; class=&amp;quot;mobile-sidebar is-active d-lg-none&amp;quot; style=&amp;quot;display: none; opacity: 0; left: -100%; width: 72%;&amp;quot;&amp;gt;\n    &amp;lt;div class=&amp;quot;close&amp;quot; id=&amp;quot;close-menu&amp;quot;&amp;gt;\n                &amp;lt;span class=&amp;quot;material-icons&amp;quot; style=&amp;quot;font-size: 32px !important&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-xmark&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;/span&amp;gt;\n    &amp;lt;/div&amp;gt;\n    &amp;lt;div class=&amp;quot;menu-container&amp;quot;&amp;gt;\n        &amp;lt;div class=&amp;quot;logo-mobile&amp;quot;&amp;gt;\n            &amp;lt;a href=&amp;quot;/agent/index&amp;quot;&amp;gt;\n                &amp;lt;img class=&amp;quot;d-flex justify-content-center mx-auto w-100&amp;quot; src=&amp;quot;/../assets/images/LOGO-NITA-PNG.png&amp;quot; alt=&amp;quot;nita logo&amp;quot;&amp;gt;\n            &amp;lt;/a&amp;gt;\n        &amp;lt;/div&amp;gt;\n\n        &amp;lt;ul class=&amp;quot;nav-links&amp;quot;&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/index&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-house&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Tableau de bord&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n\n            &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                    &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                        &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Envois&amp;lt;/span&amp;gt;\n                    &amp;lt;/a&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/envoi&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Effectuer un envoi\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/modificationEnvoiGenerale&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Modif. g\u00e9nerale d&amp;#x27;envoi\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/remboursementAnnulation&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-hourglass-start sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Rembour. D&amp;#x27;annulation\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/remboursementMynita&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-wallet sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Rembour. MYNITA\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/envoi&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-money-bill-transfer sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Envoi moneygram\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                &amp;lt;/ul&amp;gt;\n            &amp;lt;/li&amp;gt;\n\n            &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                    &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                        &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Retrait&amp;lt;/span&amp;gt;\n                    &amp;lt;/a&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/retrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-money-bill-wave sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Effectuer\n                            un retrait&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/retrait&amp;quot;&amp;gt; &amp;lt;i class=&amp;quot;fa fa-money-check-dollar sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait moneygram&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/cnss/retraitCnss&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-person-arrow-up-from-line sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait CNSS&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/careni/retraitCareni&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-person-booth sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Retrait CARENI&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                &amp;lt;/ul&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/miseADispositionAgent&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fas fa-people-arrows&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Mise \u00e0 disposition&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/encaissementsAgent&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fas fa-money-bill-trend-up&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Encaissement attribution&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/scannerQrCodeCardMyNita&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-qrcode&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;QRCode Scan MyNita Card&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                    &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa fa-credit-card-alt&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                        &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement&amp;lt;/span&amp;gt;\n                    &amp;lt;/a&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/rechargeMyNita&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Recharge MyNita\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/facture/nigelecFacture&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nigelec Postpay\u00e9\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li class=&amp;quot;active&amp;quot;&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/nigelecPrepaye&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nigelec Prepay\u00e9\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/facture/NdeFacture&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-regular fa-pen-to-square sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;NDE\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/airtime&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-money-check sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Shap Shap\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/airtimeCtoS&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-phone-alt sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Recharge C TO C(STOCK)\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxe&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-hand-holding-dollar sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Taxes Ville de Niamey\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxePermis&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-drivers-license sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Permis Ville de Niamey\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxeTaxi&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-taxi sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Taxis Ville de Niamey\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/nitaschool&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-graduation-cap sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Nita School\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/energiePlus&amp;quot;&amp;gt;\n                            &amp;lt;i class=&amp;quot;fa-solid fa-bolt sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Energie Plus\n                        &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                &amp;lt;/ul&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/AchatEnLigne&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa fa-globe-africa&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement en ligne&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/oriba&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa fa-charging-station&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Paiement oriba&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/verssementPartenaire&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-person-booth&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Versement partenaires&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n\n            &amp;lt;li class=&amp;quot;item&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;iocn-link&amp;quot;&amp;gt;\n                    &amp;lt;a href=&amp;quot;#&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa-regular fa-paper-plane fs-5&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                        &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Historiques&amp;lt;/span&amp;gt;\n                    &amp;lt;/a&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-angle-down arrow&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;ul class=&amp;quot;sub-menu&amp;quot;&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                            Envois&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/envoi/historiqueRejetAnnulationEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-not-equal sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;His. Rejet d&amp;#x27;annulation &amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRetrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                            Retraits&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueDecaissementAgent&amp;quot;&amp;gt; &amp;lt;i class=&amp;quot;fa fa-paper-plane sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Mise \u00e0 disposition&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRechargeMyNita&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Recharge Mynita&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementNigelec&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Nigelec Postpaye&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementNigelecPrepaye&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Nigelec Prepaye&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiementSeen&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Seen Postpay\u00e9&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueAirtime&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique\n                            Airtime&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxe/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Taxe Ville de Niamey&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxePermis/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Permis Ville de Niamey&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/villeNiameyTaxeTaxi/historique&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Taxi Ville de Niamey&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/historiqueEnvoi&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Envois Moneygram&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/moneygram/historiqueRetrait&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-history sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Retraits Moneygram&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/cnss/historiquePaiementCnss&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement CNSS&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/careni/historiquePaiementCareni&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement CARENI&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiquePaiement&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Hist... Paiement Achat&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueNitaSchool&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique NitaSchool&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n\n                    &amp;lt;!--                &amp;lt;li th:classappend=&amp;quot;${historiqueEnvoiGroupes}&amp;quot;&amp;gt;--&amp;gt;\n                    &amp;lt;!--                    &amp;lt;a class=&amp;quot;nav-link&amp;quot; th:href=&amp;quot;@{/agent/historiqueEnvoiGroupes}&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Envoi Group\u00e9&amp;lt;/a&amp;gt;--&amp;gt;\n                    &amp;lt;!--                &amp;lt;/li&amp;gt;--&amp;gt;\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueRetraitGroupe&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Retrait Group\u00e9&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueVersementPartenaire&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa-solid fa-table-list sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historiques versements&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n\n                    &amp;lt;li&amp;gt;\n                        &amp;lt;a class=&amp;quot;nav-link&amp;quot; href=&amp;quot;/agent/historiqueTransaction&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-globe-africa sub-menu-i&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Historique Globale&amp;lt;/a&amp;gt;\n                    &amp;lt;/li&amp;gt;\n                &amp;lt;/ul&amp;gt;\n            &amp;lt;/li&amp;gt;\n\n            &amp;lt;li class=&amp;quot;item menu&amp;quot;&amp;gt;\n                &amp;lt;a style=&amp;quot;height: 50px;&amp;quot; href=&amp;quot;/agent/cloture&amp;quot;&amp;gt;\n                    &amp;lt;i class=&amp;quot;fa-solid fa-shop-slash&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                    &amp;lt;span class=&amp;quot;link_name&amp;quot;&amp;gt;Cloturer&amp;lt;/span&amp;gt;\n                &amp;lt;/a&amp;gt;\n            &amp;lt;/li&amp;gt;\n        &amp;lt;/ul&amp;gt;\n    &amp;lt;/div&amp;gt;\n&amp;lt;/aside&amp;gt;\n\n\n    &amp;lt;div class=&amp;quot;main accueil&amp;quot;&amp;gt;\n        &amp;lt;header class=&amp;quot;app-header&amp;quot;&amp;gt;\n    &amp;lt;div class=&amp;quot;header-wrapper&amp;quot;&amp;gt;\n\n        &amp;lt;div class=&amp;quot;header-wrapper-body&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;left-side block_side&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;small_titre&amp;quot;&amp;gt;\n                    &amp;lt;h6 class=&amp;quot;title_bienvenue&amp;quot;&amp;gt;Bienvenue&amp;lt;/h6&amp;gt;\n                    &amp;lt;h5 class=&amp;quot;coord_name_style&amp;quot;&amp;gt;MAMANE ASSOUMANA MANSOUR&amp;lt;/h5&amp;gt;\n                &amp;lt;/div&amp;gt;\n\n            &amp;lt;/div&amp;gt;\n            &amp;lt;div class=&amp;quot;infos text-center&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;small_titre&amp;quot; style=&amp;quot;text-align: center;&amp;quot;&amp;gt;\n                    &amp;lt;h6 class=&amp;quot;title_bienvenue&amp;quot; style=&amp;quot;margin-bottom: 10px;&amp;quot;&amp;gt;Mot de passe expire dans :&amp;lt;/h6&amp;gt;\n\n                    &amp;lt;!-- Chrono avec contour anim\u00e9 --&amp;gt;\n                    &amp;lt;h5 id=&amp;quot;passwordExpirationCountdown&amp;quot; class=&amp;quot;coord_name_style pulse-border&amp;quot; data-expire-date=&amp;quot;2025-08-17 19:45:17.772&amp;quot;&amp;gt;0 mois 11 j 0 h 14 min 13 sec&amp;lt;/h5&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;div class=&amp;quot;notif&amp;quot;&amp;gt;\n                    &amp;lt;img class=&amp;quot;notif_icons&amp;quot; src=&amp;quot;/assets/images-new-design/icons/notif.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;div class=&amp;quot;user-dropdown&amp;quot; type=&amp;quot;button&amp;quot; id=&amp;quot;dropdownMenuButton1&amp;quot; data-bs-toggle=&amp;quot;dropdown&amp;quot; aria-expanded=&amp;quot;false&amp;quot;&amp;gt;\n                    &amp;lt;img src=&amp;quot;/../assets/images/profile/user-1.jpg&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                    &amp;lt;span class=&amp;quot;material-icons icon&amp;quot;&amp;gt;\n                                    &amp;lt;i class=&amp;quot;fa-solid fa-angle-down fs-6 me-2&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                &amp;lt;/span&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;ul class=&amp;quot;dropdown-menu&amp;quot; aria-labelledby=&amp;quot;dropdownMenuButton1&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;az-dropdown-header d-sm-none&amp;quot;&amp;gt;\n                        &amp;lt;a class=&amp;quot;az-header-arrow&amp;quot; href=&amp;quot;&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;icon ion-md-arrow-back&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;&amp;lt;/a&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                    &amp;lt;div class=&amp;quot;az-header-profile&amp;quot;&amp;gt;\n                        &amp;lt;div class=&amp;quot;az-img-user&amp;quot;&amp;gt;\n                            &amp;lt;img alt=&amp;quot;&amp;quot; src=&amp;quot;/../assets/images/profile/user-1.jpg&amp;quot;&amp;gt;\n                        &amp;lt;/div&amp;gt;&amp;lt;!-- az-img-user --&amp;gt;\n                    &amp;lt;/div&amp;gt;&amp;lt;!-- az-header-profile --&amp;gt;\n                    &amp;lt;a class=&amp;quot;d-flex align-items-center gap-2 dropdown-item&amp;quot; href=&amp;quot;/utilisateurs/changerMotDePasse&amp;quot;&amp;gt;\n                        &amp;lt;i class=&amp;quot;fa fa-gears pe-2&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Mon Compte\n                    &amp;lt;/a&amp;gt;\n                    &amp;lt;a class=&amp;quot;dropdown-item mt-2&amp;quot; href=&amp;quot;/logout&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-sign-out pe-2&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                        D\u00e9connexion&amp;lt;/a&amp;gt;\n                &amp;lt;/ul&amp;gt;\n            &amp;lt;/div&amp;gt;\n\n        &amp;lt;/div&amp;gt;\n        &amp;lt;div class=&amp;quot;main_menu_flex&amp;quot;&amp;gt;\n            &amp;lt;button class=&amp;quot;menu-sidebar d-lg-none&amp;quot; id=&amp;quot;toggle-btn&amp;quot;&amp;gt;\n                            &amp;lt;span class=&amp;quot;material-icons&amp;quot;&amp;gt;\n                                &amp;lt;i class=&amp;quot;fa-solid fa-bars&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                            &amp;lt;/span&amp;gt;\n            &amp;lt;/button&amp;gt;\n            &amp;lt;div class=&amp;quot;main-title d-sm-flex d-none&amp;quot;&amp;gt;\n                &amp;lt;img class=&amp;quot;icon__home&amp;quot; src=&amp;quot;/assets/images-new-design/icons/icon__home.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;head-title&amp;quot;&amp;gt;\n                    Menu principal\n\n                &amp;lt;/div&amp;gt;\n\n            &amp;lt;/div&amp;gt;\n        &amp;lt;/div&amp;gt;\n        &amp;lt;div class=&amp;quot;row coordinateur_info&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;right_info_style&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;row&amp;quot;&amp;gt;\n                        &amp;lt;!-- Partie Informations Solde --&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-8 col-md-8 col-sm-12 col-12 right_info_style_content&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Solde&amp;lt;/h6&amp;gt;\n\n                        &amp;lt;/div&amp;gt;\n\n                        &amp;lt;!-- Partie Image --&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12 right_info_style_img text-end&amp;quot;&amp;gt;\n                            &amp;lt;img src=&amp;quot;/assets/images-new-design/icons/arg.png&amp;quot; alt=&amp;quot;Argent&amp;quot; class=&amp;quot;img-fluid&amp;quot; style=&amp;quot;max-height: 40px;&amp;quot;&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                    &amp;lt;div class=&amp;quot;d-flex justify-content-between gap-2 align-items-center right_info_style_content&amp;quot;&amp;gt;\n                        &amp;lt;p&amp;gt;46 781 155&amp;lt;/p&amp;gt;\n                        &amp;lt;p&amp;gt;Caisse 1 - AZAWAD&amp;lt;/p&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                    &amp;lt;div class=&amp;quot;last_info_content&amp;quot;&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-6 flex-main&amp;quot;&amp;gt;\n                            &amp;lt;img src=&amp;quot;/assets/images-new-design/icons/personne.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Agent MAMANE ASSOUMANA MANSOUR&amp;lt;/h6&amp;gt;\n\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-6 flex-main&amp;quot;&amp;gt;\n                            &amp;lt;img src=&amp;quot;/assets/images-new-design/icons/siege.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Siege&amp;lt;/h6&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;right_info_style&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;row&amp;quot;&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-8 col-md-8 col-sm-12 col-12 right_info_style_content&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Agence&amp;lt;/h6&amp;gt;\n                            &amp;lt;p&amp;gt;AZAWAD&amp;lt;/p&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12 right_info_style_img&amp;quot;&amp;gt;\n                            &amp;lt;img src=&amp;quot;/assets/images-new-design/icons/en_traitemet.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                    &amp;lt;div class=&amp;quot;last_info_content&amp;quot;&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-6 flex-main&amp;quot;&amp;gt;\n                            &amp;lt;img class=&amp;quot;color__3&amp;quot; src=&amp;quot;/assets/images-new-design/icons/calendar.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                            &amp;lt;h6 id=&amp;quot;date_jour&amp;quot;&amp;gt;06-08-2025&amp;lt;/h6&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-6 flex-main&amp;quot;&amp;gt;\n                            &amp;lt;img src=&amp;quot;/assets/images-new-design/icons/siege.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Siege&amp;lt;/h6&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/div&amp;gt;\n            &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;right_info_style&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;row&amp;quot;&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-8 col-md-8 col-sm-12 col-12 right_info_style_content&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Zone&amp;lt;/h6&amp;gt;\n                            &amp;lt;p&amp;gt;BANIFANDOU&amp;lt;/p&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12 right_info_style_img&amp;quot;&amp;gt;\n                            &amp;lt;img class=&amp;quot;color__3&amp;quot; src=&amp;quot;/assets/images-new-design/icons/personne_pink.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;border_separateur&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-8 col-md-8 col-sm-12 col-12 right_info_style_content&amp;quot;&amp;gt;\n                            &amp;lt;h6&amp;gt;Coordination&amp;lt;/h6&amp;gt;\n                            &amp;lt;p&amp;gt;ZONE NIAMEY 2&amp;lt;/p&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                        &amp;lt;div class=&amp;quot;col-lg-4 col-md-4 col-sm-12 col-12 right_info_style_img&amp;quot;&amp;gt;\n                            &amp;lt;img class=&amp;quot;color__6&amp;quot; src=&amp;quot;/assets/images-new-design/icons/maison.png&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/div&amp;gt;\n        &amp;lt;/div&amp;gt;\n    &amp;lt;/div&amp;gt;\n&amp;lt;/header&amp;gt;\n        &amp;lt;div class=&amp;quot;background_div&amp;quot;&amp;gt;\n    &amp;lt;style&amp;gt;\n        .timeline {\n            display: flex;\n            justify-content: space-between;\n            position: relative;\n            margin-bottom: 2rem;\n        }\n\n        .step {\n            position: relative;\n            flex: 1;\n            text-align: center;\n            font-weight: 500;\n            padding: 10px 5px;\n            border-bottom: 4px solid #dee2e6;\n            color: #6c757d;\n            transition: all 0.3s ease;\n        }\n\n        .step.active {\n            border-bottom: 4px solid #198754;\n            color: #198754;\n        }\n\n        .step::before {\n            content: &amp;quot;&amp;quot;;\n            position: absolute;\n            top: 100%;\n            left: 50%;\n            transform: translateX(-50%);\n            width: 14px;\n            height: 14px;\n            background-color: #dee2e6;\n            border-radius: 50%;\n            border: 2px solid white;\n            z-index: 1;\n            transition: background-color 0.3s;\n        }\n\n        .step.active::before {\n            background-color: #198754;\n        }\n\n    &amp;lt;/style&amp;gt;\n    &amp;lt;script&amp;gt;\n        function setStepActive(stepNumber) {\n            const steps = document.querySelectorAll(&amp;#x27;.step&amp;#x27;);\n            steps.forEach((step, index) =&amp;gt; {\n                if (index &amp;lt; stepNumber) {\n                    step.classList.add(&amp;#x27;active&amp;#x27;);\n                } else {\n                    step.classList.remove(&amp;#x27;active&amp;#x27;);\n                }\n            });\n        }\n\n        // Exemple : appeler cette fonction dans tes callbacks :\n        function rechercherClient() {\n            const btn = document.getElementById(&amp;#x27;btnRechercheClient&amp;#x27;);\n            const loader = document.getElementById(&amp;#x27;customLoader&amp;#x27;);\n            const text = document.getElementById(&amp;#x27;textBtn&amp;#x27;);\n\n            // D\u00e9sactive le bouton + affiche le loader\n            btn.disabled = true;\n            loader.classList.remove(&amp;#x27;d-none&amp;#x27;);\n            text.textContent = &amp;quot;Recherche...&amp;quot;;\n\n            // Simulation d\u2019un appel AJAX (remplace par ton code)\n            setTimeout(() =&amp;gt; {\n                // Traitement...\n                setStepActive(2);\n                document.getElementById(&amp;#x27;resultClient&amp;#x27;).style.display = &amp;#x27;block&amp;#x27;;\n                document.getElementById(&amp;#x27;zonePaiement&amp;#x27;).style.display = &amp;#x27;block&amp;#x27;;\n\n                // R\u00e9activation + cache le loader\n                btn.disabled = false;\n                loader.classList.add(&amp;#x27;d-none&amp;#x27;);\n                text.textContent = &amp;quot;Rechercher Client&amp;quot;;\n            }, 2000);\n        }\n\n        function calculerFrais() {\n            // ... ton code frais ...\n            setStepActive(4); // R\u00e9sum\u00e9\n            document.getElementById(&amp;#x27;resumePaiement&amp;#x27;).style.display = &amp;#x27;block&amp;#x27;;\n        }\n\n        // Tu peux activer l&amp;#x27;\u00e9tape finale juste avant le submit\n        document.getElementById(&amp;quot;submitBtn&amp;quot;).addEventListener(&amp;quot;click&amp;quot;, () =&amp;gt; {\n            setStepActive(5); // Validation\n        });\n    &amp;lt;/script&amp;gt;\n\n    &amp;lt;style&amp;gt;\n        /* Taille des logos */\n        #operateurId {\n            background-size: 20px;\n            padding-left: 30px;\n        }\n\n        /* Personnalisation des logos pour chaque op\u00e9rateur */\n        #operateurId .logo-airtel {\n            background-image: url(&amp;#x27;/images/agent/Airtime/3126249384889.57ee562a52f15.jpg&amp;#x27;);\n        }\n\n        #operateurId .logo-zamani {\n            background-image: url(&amp;#x27;/images/agent/Airtime/logo.png&amp;#x27;);\n        }\n\n        #operateurId .logo-moov {\n            background-image: url(&amp;#x27;/images/agent/Airtime/Moov_Africa_Niger.jpg&amp;#x27;);\n        }\n\n        #operateurId .logo-niger-telecome {\n            background-image: url(&amp;#x27;/images/agent/Airtime/unnamed.png&amp;#x27;);\n        }\n\n        /* Positionnement des logos */\n        #operateurId option {\n            background-repeat: no-repeat;\n            background-position: left center;\n            padding-left: 30px; /* Espacement entre le texte et l&amp;#x27;image */\n        }\n    &amp;lt;/style&amp;gt;\n    &amp;lt;style&amp;gt;\n        * {\n            padding: 0;\n            margin: 0;\n            box-sizing: border-box;\n        }\n\n        .inputfield {\n            width: 100%;\n            display: flex;\n            flex-wrap: wrap; /* Permet aux inputs de se placer sur plusieurs lignes si n\u00e9cessaire */\n            justify-content: space-around;\n            gap: 0.5em; /* Ajoute de l&amp;#x27;espace entre les champs */\n        }\n\n        .inputSelect {\n            height: 3em;\n            width: 3em;\n            border: 2px solid #E74E0F;\n            outline: none;\n            text-align: center;\n            font-size: 1.5em;\n            border-radius: 0.3em;\n            background-color: #ffffff;\n            -moz-appearance: textfield; /* Hide number field arrows */\n        }\n\n        input[type=&amp;quot;number&amp;quot;]::-webkit-outer-spin-button,\n        input[type=&amp;quot;number&amp;quot;]::-webkit-inner-spin-button {\n            -webkit-appearance: none;\n            margin: 0;\n        }\n\n        .inputSelect:disabled {\n            color: #89888b;\n        }\n\n        .inputSelect:focus {\n            border: 3px solid #ffb800;\n        }\n\n        /* Ajout d&amp;#x27;espacement entre les sections du formulaire */\n        .form-group {\n            margin-bottom: 1.5em;\n        }\n\n    &amp;lt;/style&amp;gt;\n    &amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;\n        function detailHaskeScript(idHaske) {\n            let showDetailModal = document.getElementById(&amp;quot;showDetailModal&amp;quot;);\n            $.ajax({\n                url: &amp;#x27;/agent/getDetailHaske&amp;#x27;, // L&amp;#x27;URL de l&amp;#x27;endpoint Thymeleaf pour r\u00e9cup\u00e9rer les options\n                type: &amp;#x27;GET&amp;#x27;,\n                data: {idHaske: idHaske},\n                success: function (data) {\n                    showDetailModal.innerHTML = data;\n                }\n            });\n        }\n\n        function printFunction(idHaske) {\n            let newWindow = window.open(&amp;#x27;/agent/haskeImpression?idTransaction=&amp;#x27; + idHaske, &amp;#x27;_blank&amp;#x27;);\n            newWindow.addEventListener(&amp;#x27;load&amp;#x27;, function () {\n                newWindow.print();\n            });\n        }\n    &amp;lt;/script&amp;gt;\n\n    &amp;lt;!--    todo : pour la rechercher--&amp;gt;\n    &amp;lt;script&amp;gt;\n        function rechercherClient() {\n            const numeroCompteur = document.getElementById(&amp;quot;numCompteur&amp;quot;).value.trim();\n            const numeroTelephone = document.getElementById(&amp;quot;telClientConfirm&amp;quot;).value.trim();\n\n            if (!numeroCompteur || !numeroTelephone) {\n                alert(&amp;quot;Veuillez renseigner le num\u00e9ro de compteur et le t\u00e9l\u00e9phone.&amp;quot;);\n                return;\n            }\n\n            $.ajax({\n                type: &amp;quot;GET&amp;quot;,\n                url: &amp;quot;/agent/facture/getInfoFactureHaske&amp;quot;,\n                data: {\n                    numeroTelephone: numeroTelephone,\n                    numeroCompteur: numeroCompteur\n                },\n                success: function (response) {\n                    if (response.status === &amp;quot;SUCCESS&amp;quot;) {\n                        let infos = response.data;\n                        setStepActive(2); // Passage \u00e0 &amp;quot;R\u00e9sultat Client&amp;quot;\n\n                        $(&amp;quot;#nomClient&amp;quot;).val(infos.nom_client || &amp;quot;N/A&amp;quot;);\n                        $(&amp;quot;#adresseClient&amp;quot;).val(infos.contact_client_Nigelec || &amp;quot;N/A&amp;quot;);\n                        $(&amp;quot;#soldeClient&amp;quot;).val(infos.montant_minimal ? infos.montant_minimal.toLocaleString(&amp;#x27;fr-FR&amp;#x27;) : &amp;quot;0.00 F CFA&amp;quot;);\n\n                        $(&amp;quot;#resumCompteur&amp;quot;).text(numeroCompteur);\n                        $(&amp;quot;#resumTel&amp;quot;).text(numeroTelephone);\n\n                        $(&amp;quot;#resultClient&amp;quot;).show();\n                        $(&amp;quot;#zonePaiement&amp;quot;).show();\n                        $(&amp;quot;#submitBtn&amp;quot;).prop(&amp;quot;disabled&amp;quot;, false);\n                    } else {\n                        alert(&amp;quot;Erreur : &amp;quot; + response.message);\n                        $(&amp;quot;#resultClient&amp;quot;).hide();\n                        $(&amp;quot;#zonePaiement&amp;quot;).hide();\n                    }\n                },\n                error: function (xhr) {\n                    alert(&amp;quot;Une erreur s\u2019est produite. Veuillez r\u00e9essayer.&amp;quot;);\n                    console.error(xhr.responseText);\n                }\n            });\n        }\n    &amp;lt;/script&amp;gt;\n\n\n    &amp;lt;script&amp;gt;\n        function calculerFrais() {\n\n            function cleanNumber(str) {\n                return str.toString().replace(&amp;#x27;,&amp;#x27;, &amp;#x27;.&amp;#x27;);\n            }\n\n            const montantInput = document.getElementById(&amp;quot;montantTransactionId&amp;quot;).value;\n            const montantStr = montantInput.replace(/\\s+/g, &amp;#x27;&amp;#x27;);\n            const montant = parseFloat(montantStr);\n            const btnSubmit = document.getElementById(&amp;#x27;submitBtn&amp;#x27;);\n\n            btnSubmit.disabled = true; // toujours d\u00e9sactiver par d\u00e9faut au d\u00e9but\n\n            if (!montant || isNaN(montant)) {\n                alert(&amp;quot;Veuillez saisir un montant valide.&amp;quot;);\n                return;\n            }\n\n            fetch(&amp;quot;/agent/facture/calculerFraisTotaux?montantStr=&amp;quot; + encodeURIComponent(montantStr))\n                .then(res =&amp;gt; {\n                    if (!res.ok) {\n                        return res.text().then(msg =&amp;gt; { throw new Error(msg); });\n                    }\n                    return res.json();\n                })\n                .then(data =&amp;gt; {\n                    const { montant, fraisTimbre, fraisTransaction, totalFrais, montantTotal } = data;\n\n                    // V\u00e9rifier que les fraisTransaction sont bien d\u00e9finis\n                    if (fraisTransaction == null || isNaN(fraisTransaction)) {\n                        alert(&amp;quot;Les frais ne sont pas d\u00e9finis. Veuillez contacter un administrateur.&amp;quot;);\n                        btnSubmit.disabled = true;\n                        return;\n                    }\n\n                    setStepActive(3);\n                    setStepActive(4);\n\n                    document.getElementById(&amp;#x27;resumMontant&amp;#x27;).innerText = montant;\n                    document.getElementById(&amp;#x27;resumFraisTimbre&amp;#x27;).innerText = fraisTimbre;\n                    document.getElementById(&amp;#x27;resumFraisTransaction&amp;#x27;).innerText = fraisTransaction;\n                    document.getElementById(&amp;#x27;resumTotalFrais&amp;#x27;).innerText = totalFrais;\n                    document.getElementById(&amp;#x27;resumMontantTotal&amp;#x27;).innerText = montantTotal;\n\n                    document.getElementById(&amp;#x27;inputMontantAchat&amp;#x27;).value = cleanNumber(montant);\n                    document.getElementById(&amp;#x27;inputFraisTimbre&amp;#x27;).value = cleanNumber(fraisTimbre);\n                    document.getElementById(&amp;#x27;inputFraisTransaction&amp;#x27;).value = cleanNumber(fraisTransaction);\n                    document.getElementById(&amp;#x27;inputTotalFrais&amp;#x27;).value = cleanNumber(totalFrais);\n                    document.getElementById(&amp;#x27;inputMontantTotalPaye&amp;#x27;).value = cleanNumber(montantTotal);\n\n                    document.getElementById(&amp;quot;resumePaiement&amp;quot;).style.display = &amp;quot;block&amp;quot;;\n                    btnSubmit.disabled = false;\n\n                })\n                .catch(error =&amp;gt; {\n                    console.error(&amp;quot;Erreur lors du calcul des frais :&amp;quot;, error);\n                    alert(&amp;quot;Erreur : &amp;quot; + error.message);\n                    btnSubmit.disabled = true;\n                });\n        }\n    &amp;lt;/script&amp;gt;\n\n    &amp;lt;script&amp;gt;\n        function formatInputWithSpaces(id) {\n            // Ta fonction existante, laisse comme elle est\n        }\n\n        function validerChampsClient() {\n            const tel = document.getElementById(&amp;quot;telClient&amp;quot;).value.trim();\n            const telConfirm = document.getElementById(&amp;quot;telClientConfirm&amp;quot;).value.trim();\n            const compteur = document.getElementById(&amp;quot;numCompteur&amp;quot;).value.trim();\n            const bouton = document.getElementById(&amp;quot;btnRechercheClient&amp;quot;);\n            const message = document.getElementById(&amp;quot;message&amp;quot;);\n\n            const isTelValid = tel.length === 8 &amp;amp;&amp;amp; /^\\d+$/.test(tel);\n            const isTelConfirmValid = telConfirm.length === 8 &amp;amp;&amp;amp; tel === telConfirm;\n            const isCompteurValid = compteur.length &amp;gt; 0;\n\n            if (isTelValid &amp;amp;&amp;amp; isTelConfirmValid) {\n                message.style.display = &amp;quot;none&amp;quot;;\n            } else {\n                message.style.display = &amp;quot;inline&amp;quot;;\n            }\n\n            bouton.disabled = !(isTelValid &amp;amp;&amp;amp; isTelConfirmValid &amp;amp;&amp;amp; isCompteurValid);\n        }\n\n        // Lier l\u2019\u00e9v\u00e9nement sur les trois champs\n        document.addEventListener(&amp;quot;DOMContentLoaded&amp;quot;, function () {\n            [&amp;quot;telClient&amp;quot;, &amp;quot;telClientConfirm&amp;quot;, &amp;quot;numCompteur&amp;quot;].forEach(id =&amp;gt; {\n                document.getElementById(id).addEventListener(&amp;quot;input&amp;quot;, validerChampsClient);\n            });\n        });\n    &amp;lt;/script&amp;gt;\n\n    &amp;lt;div class=&amp;quot;container-fluid&amp;quot;&amp;gt;\n        &amp;lt;div class=&amp;quot;row&amp;quot;&amp;gt;\n            &amp;lt;div class=&amp;quot;col-12&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n                    &amp;lt;h5 style=&amp;quot;color: #192f72&amp;quot;&amp;gt;&amp;lt;img alt=&amp;quot;Exemple d&amp;#x27;image&amp;quot; src=&amp;quot;/assets/images/compteur-prepaye.jpg&amp;quot; width=&amp;quot;50&amp;quot;&amp;gt; \u2022 Recharge Compteur Nigelec Prepaye\n                    &amp;lt;/h5&amp;gt;\n                &amp;lt;/div&amp;gt;\n                &amp;lt;!-- alert --&amp;gt;\n                \n                &amp;lt;div class=&amp;quot;card custom-card&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;card-body p-0&amp;quot;&amp;gt;\n                        &amp;lt;form method=&amp;quot;get&amp;quot; action=&amp;quot;/agent/nigelecPrepaye&amp;quot;&amp;gt;\n                            &amp;lt;div class=&amp;quot;p-4&amp;quot;&amp;gt;\n                                &amp;lt;div class=&amp;quot;row mx-0 align-items-center&amp;quot;&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-12 col-lg-4&amp;quot;&amp;gt;\n                                        &amp;lt;div class=&amp;quot;search-wrapper&amp;quot;&amp;gt;\n                                            &amp;lt;input class=&amp;quot;search-input&amp;quot; type=&amp;quot;search&amp;quot; name=&amp;quot;keyword&amp;quot; value=&amp;quot;&amp;quot; placeholder=&amp;quot;Entrez la reference : &amp;quot; aria-label=&amp;quot;Search&amp;quot; required=&amp;quot;&amp;quot;&amp;gt;\n                                            &amp;lt;button class=&amp;quot;search-icon&amp;quot; type=&amp;quot;submit&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fa fa-magnifying-glass&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/div&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-12 col-lg-6 offset-lg-2 text-end&amp;quot;&amp;gt;\n                                        &amp;lt;button class=&amp;quot;btn btn-main me-2&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; data-bs-target=&amp;quot;#AddNewAirtime&amp;quot;&amp;gt;\n                                            &amp;lt;i class=&amp;quot;fa fa-list-check me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;Recharger compteur\n                                        &amp;lt;/button&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                            &amp;lt;/div&amp;gt;\n                        &amp;lt;/form&amp;gt;\n\n                        &amp;lt;div&amp;gt;\n                            \n                            \n                            &amp;lt;div class=&amp;quot;overflow-x-auto&amp;quot;&amp;gt;\n                                &amp;lt;table id=&amp;quot;dtBasicExample&amp;quot; class=&amp;quot;table table-hover table-striped table-bordered border-dark-light text-center&amp;quot;&amp;gt;\n                                    &amp;lt;thead class=&amp;quot;bg-dark text-white&amp;quot;&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th class=&amp;quot;th-sm text-dark&amp;quot;&amp;gt;#&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Reference&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Num\u00e9ro ticket&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Code r\u00e9charge&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;T\u00e9l\u00e9phone Abonn\u00e9&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;N\u00b0 Compteur&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Montant&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Timbre&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Montant re\u00e7u&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;NBR KWH&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;DATE-Heure&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;text-dark&amp;quot; scope=&amp;quot;col&amp;quot;&amp;gt;Agent&amp;lt;/th&amp;gt;\n                                        &amp;lt;th class=&amp;quot;th-sm text-dark text-center&amp;quot;&amp;gt;Actions&amp;lt;/th&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;/thead&amp;gt;\n                                    &amp;lt;tbody&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;1&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE04D15263D7233&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2926015&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;23920696606929802254&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 12:02:12.031&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462877&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462877&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;2&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE47132BC3D3A73&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925980&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;13506192624798788748&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:53:39.539&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462875&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462875&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;3&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE29D064BFB19C3&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925959&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;37015717151807551926&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:47:02.17&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462873&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462873&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;4&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE1C88DD9F17383&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925939&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;02786731360625306614&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:42:24.502&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462872&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462872&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;5&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE8DD12CBB5B973&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925911&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810643726362916101&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:37:15.426&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462871&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462871&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;6&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE1F38032916543&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925870&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;59357870258790420006&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:28:36.379&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462870&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462870&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;7&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE30BF0EBC5F483&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925856&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;67170004892090055253&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1398&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:23:41.594&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462869&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462869&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;tr&amp;gt;\n                                        &amp;lt;th scope=&amp;quot;row&amp;quot;&amp;gt;8&amp;lt;/th&amp;gt;\n                                        &amp;lt;td&amp;gt;HASKE216B055539C43&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;91905/2925834&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;37544168475187328475&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;99401994&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;54810216884&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;200 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;1 500 F CFA&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;20&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;2025-08-06 11:19:17.516&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;MAMANE ASSOUMANA - MANSOUR&amp;lt;/td&amp;gt;\n                                        &amp;lt;td&amp;gt;\n                                            &amp;lt;!--buttons details--&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-primary m-1 card-hover&amp;quot; data-bs-target=&amp;quot;#detailnigelecPrepayer&amp;quot; data-bs-toggle=&amp;quot;modal&amp;quot; id=&amp;quot;idEditHaskeModal&amp;quot; onclick=&amp;quot;detailHaskeScript(&amp;#x27;462868&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;&amp;lt;i class=&amp;quot;fa fa-eye me-1&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                            &amp;lt;button class=&amp;quot;btn btn-dark btn-rounded&amp;quot; data-mdb-ripple-color=&amp;quot;dark&amp;quot; id=&amp;quot;printButton&amp;quot; onclick=&amp;quot;printFunction(&amp;#x27;462868&amp;#x27;)&amp;quot; type=&amp;quot;button&amp;quot;&amp;gt;\n                                                &amp;lt;i class=&amp;quot;fas fa-print&amp;quot;&amp;gt;&amp;lt;/i&amp;gt;\n                                            &amp;lt;/button&amp;gt;\n                                        &amp;lt;/td&amp;gt;\n                                    &amp;lt;/tr&amp;gt;\n                                    &amp;lt;/tbody&amp;gt;\n                                &amp;lt;/table&amp;gt;\n                                &amp;lt;ul class=&amp;quot;nav nav-pills p-2&amp;quot;&amp;gt;\n                                    &amp;lt;li&amp;gt;\n                                        &amp;lt;a class=&amp;quot;btn btn-primary ms-1&amp;quot; href=&amp;quot;/agent/nigelecPrepaye?page=0&amp;amp;amp;keyword=&amp;quot;&amp;gt;0&amp;lt;/a&amp;gt;\n                                    &amp;lt;/li&amp;gt;\n                                &amp;lt;/ul&amp;gt;\n                            &amp;lt;/div&amp;gt;\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/div&amp;gt;\n\n        &amp;lt;/div&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n\n    &amp;lt;!-- Modal detail Prepayer--&amp;gt;\n    &amp;lt;div aria-hidden=&amp;quot;true&amp;quot; aria-labelledby=&amp;quot;detail_haske_modal&amp;quot; class=&amp;quot;modal custom-modal fade&amp;quot; data-bs-backdrop=&amp;quot;static&amp;quot; data-bs-keyboard=&amp;quot;false&amp;quot; id=&amp;quot;detailnigelecPrepayer&amp;quot; tabindex=&amp;quot;-1&amp;quot;&amp;gt;\n        &amp;lt;div class=&amp;quot;modal-dialog modal-lg &amp;quot;&amp;gt;\n            &amp;lt;!--Form--&amp;gt;\n            &amp;lt;form&amp;gt;\n                &amp;lt;div id=&amp;quot;showDetailModal&amp;quot;&amp;gt;\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/form&amp;gt;\n            &amp;lt;!--Fin Form--&amp;gt;\n        &amp;lt;/div&amp;gt;\n    &amp;lt;/div&amp;gt;\n    &amp;lt;!-- Fin Modal detail Prepayer --&amp;gt;\n\n    &amp;lt;div class=&amp;quot;modal custom-modal fade show&amp;quot; id=&amp;quot;AddNewAirtime&amp;quot; data-bs-backdrop=&amp;quot;static&amp;quot; data-bs-keyboard=&amp;quot;false&amp;quot; tabindex=&amp;quot;-1&amp;quot; aria-labelledby=&amp;quot;ajout_comptePartenaire_modal&amp;quot; style=&amp;quot;display: block;&amp;quot; aria-modal=&amp;quot;true&amp;quot; role=&amp;quot;dialog&amp;quot;&amp;gt;\n        &amp;lt;div class=&amp;quot;modal-dialog modal-xl&amp;quot;&amp;gt;\n            &amp;lt;form method=&amp;quot;post&amp;quot; action=&amp;quot;/agent/savePaiementNigelecPrepaye&amp;quot;&amp;gt;&amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;_csrf&amp;quot; value=&amp;quot;CSjXlDkQANqCJpnQfcceufvyZG-CUQHbDgl2cgC7BgKHUSnSaBvl9g0hMOOvFKmyH-oqjMnHSQ3kNGL2OT9DQDHYMGGwNUux&amp;quot;&amp;gt;\n                &amp;lt;div class=&amp;quot;modal-content&amp;quot;&amp;gt;\n                    &amp;lt;div class=&amp;quot;modal-header text-center p-4&amp;quot;&amp;gt;\n                        &amp;lt;h1 class=&amp;quot;modal-title m-auto fs-5&amp;quot;&amp;gt;ACHAT NIGELEC PR\u00c9PAY\u00c9&amp;lt;/h1&amp;gt;\n                    &amp;lt;/div&amp;gt;\n\n                    &amp;lt;div class=&amp;quot;modal-body p-5&amp;quot;&amp;gt;\n                        &amp;lt;!-- Timeline \u00e9tape --&amp;gt;\n                        &amp;lt;div class=&amp;quot;timeline mb-5&amp;quot;&amp;gt;\n                            &amp;lt;div class=&amp;quot;step active&amp;quot; id=&amp;quot;step1&amp;quot;&amp;gt;1. Infos Client&amp;lt;/div&amp;gt;\n                            &amp;lt;div class=&amp;quot;step&amp;quot; id=&amp;quot;step2&amp;quot;&amp;gt;2. R\u00e9sultat Client&amp;lt;/div&amp;gt;\n                            &amp;lt;div class=&amp;quot;step&amp;quot; id=&amp;quot;step3&amp;quot;&amp;gt;3. Saisie Montant&amp;lt;/div&amp;gt;\n                            &amp;lt;div class=&amp;quot;step&amp;quot; id=&amp;quot;step4&amp;quot;&amp;gt;4. R\u00e9sum\u00e9&amp;lt;/div&amp;gt;\n                            &amp;lt;div class=&amp;quot;step&amp;quot; id=&amp;quot;step5&amp;quot;&amp;gt;5. Validation&amp;lt;/div&amp;gt;\n                        &amp;lt;/div&amp;gt;\n\n                        &amp;lt;div class=&amp;quot;container&amp;quot;&amp;gt;\n\n                            &amp;lt;!-- \u00c9TAPE 1 : Entr\u00e9e t\u00e9l\u00e9phone + compteur + appel API --&amp;gt;\n                            &amp;lt;div class=&amp;quot;row mb-3&amp;quot;&amp;gt;\n                                &amp;lt;div class=&amp;quot;row mt-4&amp;quot;&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-6&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;telClient&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;T\u00e9l\u00e9phone abonn\u00e9&amp;lt;/label&amp;gt;\n                                        &amp;lt;input class=&amp;quot;form-control&amp;quot; id=&amp;quot;telClient&amp;quot; type=&amp;quot;text&amp;quot; placeholder=&amp;quot;Num\u00e9ro T\u00e9l\u00e9phone&amp;quot; maxlength=&amp;quot;8&amp;quot; oninput=&amp;quot;formatInputWithSpaces(this.id)&amp;quot; style=&amp;quot;border-color: green;&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-6&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;telClientConfirm&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Confirmation T\u00e9l\u00e9phone&amp;lt;/label&amp;gt;\n                                        &amp;lt;input class=&amp;quot;form-control&amp;quot; id=&amp;quot;telClientConfirm&amp;quot; type=&amp;quot;text&amp;quot; name=&amp;quot;phoneAbonne&amp;quot; maxlength=&amp;quot;8&amp;quot; placeholder=&amp;quot;Confirmer Num\u00e9ro T\u00e9l\u00e9phone&amp;quot; oninput=&amp;quot;formatInputWithSpaces(this.id)&amp;quot; style=&amp;quot;border-color: green;&amp;quot;&amp;gt;\n                                        &amp;lt;span id=&amp;quot;message&amp;quot; style=&amp;quot;color: red; display: none;&amp;quot;&amp;gt;Les num\u00e9ros ne correspondent pas&amp;lt;/span&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                                &amp;lt;div class=&amp;quot;row mt-4&amp;quot;&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-8&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;numCompteur&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Num\u00e9ro de compteur&amp;lt;/label&amp;gt;\n                                        &amp;lt;input required=&amp;quot;&amp;quot; type=&amp;quot;text&amp;quot; id=&amp;quot;numCompteur&amp;quot; name=&amp;quot;numeroCompteur&amp;quot; class=&amp;quot;form-control&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-4&amp;quot;&amp;gt;\n                                        &amp;lt;label class=&amp;quot;form-label d-block&amp;quot;&amp;gt;&amp;amp;nbsp;&amp;lt;/label&amp;gt;\n                                        &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-primary w-100 d-flex align-items-center justify-content-center&amp;quot; id=&amp;quot;btnRechercheClient&amp;quot; onclick=&amp;quot;rechercherClient()&amp;quot;&amp;gt;\n                                            &amp;lt;span id=&amp;quot;textBtn&amp;quot;&amp;gt;Rechercher Client&amp;lt;/span&amp;gt;\n                                            &amp;lt;span id=&amp;quot;customLoader&amp;quot; class=&amp;quot;loader d-none ms-2&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;\n                                        &amp;lt;/button&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                            &amp;lt;/div&amp;gt;\n\n\n                            &amp;lt;!-- R\u00e9sultat infos client --&amp;gt;\n                            &amp;lt;div id=&amp;quot;resultClient&amp;quot; style=&amp;quot;display:none;&amp;quot; class=&amp;quot;row mb-3&amp;quot;&amp;gt;\n                                &amp;lt;div class=&amp;quot;col-12&amp;quot;&amp;gt;\n                                    &amp;lt;h5&amp;gt;Informations client&amp;lt;/h5&amp;gt;\n                                    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;nomClient&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Nom&amp;lt;/label&amp;gt;\n                                        &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;nomClient&amp;quot; readonly=&amp;quot;&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;adresseClient&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Adresse&amp;lt;/label&amp;gt;\n                                        &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;adresseClient&amp;quot; readonly=&amp;quot;&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;mb-3&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;soldeClient&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;MONTANT MINIMAL (F CFA)&amp;lt;/label&amp;gt;\n                                        &amp;lt;input type=&amp;quot;text&amp;quot; class=&amp;quot;form-control&amp;quot; id=&amp;quot;soldeClient&amp;quot; readonly=&amp;quot;&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                            &amp;lt;/div&amp;gt;\n\n                            &amp;lt;!-- \u00c9TAPE 2 : T\u00e9l\u00e9phone + montant --&amp;gt;\n                            &amp;lt;div id=&amp;quot;zonePaiement&amp;quot; style=&amp;quot;display:none;&amp;quot;&amp;gt;\n\n                                &amp;lt;div class=&amp;quot;row mt-4&amp;quot;&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-6&amp;quot;&amp;gt;\n                                        &amp;lt;label for=&amp;quot;montantTransactionId&amp;quot; class=&amp;quot;form-label&amp;quot;&amp;gt;Montant&amp;lt;/label&amp;gt;\n                                        &amp;lt;input class=&amp;quot;form-control&amp;quot; id=&amp;quot;montantTransactionId&amp;quot; type=&amp;quot;text&amp;quot; placeholder=&amp;quot;Montant Transaction&amp;quot; oninput=&amp;quot;formatInputSeparateursMilliers(&amp;#x27;montantTransactionId&amp;#x27;, &amp;#x27;hiddenInput&amp;#x27;)&amp;quot;&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; id=&amp;quot;hiddenInput&amp;quot; name=&amp;quot;montantTransaction&amp;quot;&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                    &amp;lt;div class=&amp;quot;col-md-6&amp;quot;&amp;gt;\n                                        &amp;lt;label class=&amp;quot;form-label d-block&amp;quot;&amp;gt;&amp;amp;nbsp;&amp;lt;/label&amp;gt;\n                                        &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-outline-success w-100&amp;quot; onclick=&amp;quot;calculerFrais()&amp;quot;&amp;gt;Calculer les frais\n                                        &amp;lt;/button&amp;gt;\n                                    &amp;lt;/div&amp;gt;\n                                &amp;lt;/div&amp;gt;\n\n                                &amp;lt;!-- R\u00e9sum\u00e9 --&amp;gt;\n                                &amp;lt;div id=&amp;quot;resumePaiement&amp;quot; style=&amp;quot;display:none;&amp;quot; class=&amp;quot;mt-4 border p-3 rounded bg-light&amp;quot;&amp;gt;\n                                    &amp;lt;h5&amp;gt;R\u00e9sum\u00e9 du paiement&amp;lt;/h5&amp;gt;\n\n                                    &amp;lt;p&amp;gt;Montant de l&amp;#x27;achat :\n                                        &amp;lt;strong&amp;gt;&amp;lt;span id=&amp;quot;resumMontant&amp;quot;&amp;gt;&amp;lt;/span&amp;gt; F CFA&amp;lt;/strong&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;montantTransaction&amp;quot; id=&amp;quot;inputMontantAchat&amp;quot;&amp;gt;\n                                    &amp;lt;/p&amp;gt;\n\n                                    &amp;lt;p&amp;gt;Frais de timbre :\n                                        &amp;lt;strong&amp;gt;&amp;lt;span id=&amp;quot;resumFraisTimbre&amp;quot;&amp;gt;&amp;lt;/span&amp;gt; F CFA&amp;lt;/strong&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;timbre&amp;quot; id=&amp;quot;inputFraisTimbre&amp;quot;&amp;gt;\n                                    &amp;lt;/p&amp;gt;\n\n                                    &amp;lt;p&amp;gt;Frais de transaction :\n                                        &amp;lt;strong&amp;gt;&amp;lt;span id=&amp;quot;resumFraisTransaction&amp;quot;&amp;gt;&amp;lt;/span&amp;gt; F CFA&amp;lt;/strong&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;fraisHT&amp;quot; id=&amp;quot;inputFraisTransaction&amp;quot;&amp;gt;\n                                    &amp;lt;/p&amp;gt;\n\n                                    &amp;lt;p&amp;gt;Total frais :\n                                        &amp;lt;strong&amp;gt;&amp;lt;span id=&amp;quot;resumTotalFrais&amp;quot;&amp;gt;&amp;lt;/span&amp;gt; F CFA&amp;lt;/strong&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;totalFrais&amp;quot; id=&amp;quot;inputTotalFrais&amp;quot;&amp;gt;\n                                    &amp;lt;/p&amp;gt;\n\n                                    &amp;lt;p class=&amp;quot;text-success&amp;quot;&amp;gt;Montant total \u00e0 payer :\n                                        &amp;lt;strong&amp;gt;&amp;lt;span id=&amp;quot;resumMontantTotal&amp;quot;&amp;gt;&amp;lt;/span&amp;gt; F CFA&amp;lt;/strong&amp;gt;\n                                        &amp;lt;input type=&amp;quot;hidden&amp;quot; name=&amp;quot;montantTotalPaye&amp;quot; id=&amp;quot;inputMontantTotalPaye&amp;quot;&amp;gt;\n                                    &amp;lt;/p&amp;gt;\n                                &amp;lt;/div&amp;gt;\n\n                            &amp;lt;/div&amp;gt;\n\n                            &amp;lt;!-- Boutons --&amp;gt;\n                            &amp;lt;div class=&amp;quot;row mt-5&amp;quot;&amp;gt;\n                                &amp;lt;div class=&amp;quot;col-md-4&amp;quot;&amp;gt;\n                                    &amp;lt;button type=&amp;quot;reset&amp;quot; class=&amp;quot;btn btn-secondary w-100&amp;quot; data-bs-dismiss=&amp;quot;modal&amp;quot;&amp;gt;\n                                        R\u00e9initialiser\n                                    &amp;lt;/button&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                                &amp;lt;div class=&amp;quot;col-md-4&amp;quot;&amp;gt;\n                                    &amp;lt;button type=&amp;quot;button&amp;quot; class=&amp;quot;btn btn-outline-danger w-100&amp;quot; data-bs-dismiss=&amp;quot;modal&amp;quot;&amp;gt;\n                                        Annuler\n                                    &amp;lt;/button&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                                &amp;lt;div class=&amp;quot;col-md-4&amp;quot;&amp;gt;\n                                    &amp;lt;button type=&amp;quot;submit&amp;quot; id=&amp;quot;submitBtn&amp;quot; class=&amp;quot;btn btn-success w-100&amp;quot; disabled=&amp;quot;&amp;quot; style=&amp;quot;background-color: gray;&amp;quot;&amp;gt;\n                                        Valider\n                                    &amp;lt;/button&amp;gt;\n                                &amp;lt;/div&amp;gt;\n                            &amp;lt;/div&amp;gt;\n\n                        &amp;lt;/div&amp;gt;\n                    &amp;lt;/div&amp;gt;\n                &amp;lt;/div&amp;gt;\n            &amp;lt;/form&amp;gt;\n        &amp;lt;/div&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n    &amp;lt;script&amp;gt;\n        const phoneInput = document.getElementById(&amp;quot;telClient&amp;quot;);\n        const confirmInput = document.getElementById(&amp;quot;telClientConfirm&amp;quot;);\n        const message = document.getElementById(&amp;quot;message&amp;quot;);\n        const submitBtn = document.getElementById(&amp;quot;submitBtn&amp;quot;);\n\n        // Fonction pour v\u00e9rifier la validit\u00e9 des num\u00e9ros de t\u00e9l\u00e9phone\n        function validatePhoneNumber() {\n            const phoneValue = phoneInput.value;\n            const confirmValue = confirmInput.value;\n\n            // V\u00e9rifie si les deux num\u00e9ros sont identiques et s&amp;#x27;ils ont exactement 8 chiffres\n            const isValidPhone = /^[0-9]{8}$/.test(phoneValue) &amp;amp;&amp;amp; /^[0-9]{8}$/.test(confirmValue);\n\n            if (phoneValue !== confirmValue || !isValidPhone) {\n                message.style.display = &amp;quot;block&amp;quot;; // Affiche le message d&amp;#x27;erreur\n                //submitBtn.disabled = true; // D\u00e9sactive le bouton de soumission\n\n                // Ajoute une bordure rouge\n                phoneInput.style.borderColor = &amp;quot;red&amp;quot;;\n                confirmInput.style.borderColor = &amp;quot;red&amp;quot;;\n            } else {\n                message.style.display = &amp;quot;none&amp;quot;; // Cache le message d&amp;#x27;erreur\n                //submitBtn.disabled = false; // Active le bouton de soumission\n\n                // Ajoute une bordure verte\n                phoneInput.style.borderColor = &amp;quot;green&amp;quot;;\n                confirmInput.style.borderColor = &amp;quot;green&amp;quot;;\n            }\n        }\n\n        // Ajoute un \u00e9v\u00e9nement pour v\u00e9rifier la saisie \u00e0 chaque frappe\n        phoneInput.addEventListener(&amp;quot;input&amp;quot;, validatePhoneNumber);\n        confirmInput.addEventListener(&amp;quot;input&amp;quot;, validatePhoneNumber);\n    &amp;lt;/script&amp;gt;\n    &amp;lt;script&amp;gt;\n        document.addEventListener(&amp;quot;DOMContentLoaded&amp;quot;, function () {\n            const numCompteur = document.getElementById(&amp;quot;numCompteur&amp;quot;);\n            const numCompteurConfirm = document.getElementById(&amp;quot;numCompteurConfirm&amp;quot;);\n            const errorMessage = document.getElementById(&amp;quot;error-message&amp;quot;);\n            const submitBtn = document.getElementById(&amp;quot;submitBtn&amp;quot;);\n\n            // D\u00e9sactiver le bouton au chargement de la page\n            submitBtn.disabled = true;\n            submitBtn.style.backgroundColor = &amp;quot;gray&amp;quot;;\n\n            function validateCounterNumber() {\n                let originalValue = numCompteur.value;\n                let confirmValue = numCompteurConfirm.value;\n                let isValid = true;\n\n                // V\u00e9rifier si la longueur minimale de 14 caract\u00e8res est respect\u00e9e\n                if (originalValue.length &amp;lt; 11 || confirmValue.length &amp;lt; 11) {\n                    isValid = false;\n                }\n\n                // V\u00e9rifier si la confirmation suit exactement lorsiginal\n                for (let i = 0; i &amp;lt; confirmValue.length; i++) {\n                    if (confirmValue[i] !== originalValue[i]) {\n                        isValid = false;\n                        break;\n                    }\n                }\n\n                // Emp\u00eacher la saisie d&amp;#x27;un caract\u00e8re incorrect\n                if (confirmValue.length &amp;gt; originalValue.length) {\n                    numCompteurConfirm.value = confirmValue.slice(0, originalValue.length);\n                    return;\n                }\n\n                // Appliquer les couleurs et activer/d\u00e9sactiver le bouton\n                if (!isValid) {\n                    numCompteur.style.borderColor = &amp;quot;red&amp;quot;;\n                    numCompteurConfirm.style.borderColor = &amp;quot;red&amp;quot;;\n                    errorMessage.style.display = &amp;quot;block&amp;quot;;\n                    errorMessage.textContent = &amp;quot;Erreur : La confirmation doit \u00eatre identique et contenir au moins 14 caract\u00e8res.&amp;quot;;\n                    submitBtn.disabled = true;\n                    submitBtn.style.backgroundColor = &amp;quot;gray&amp;quot;; // Bouton d\u00e9sactiv\u00e9 en gris\n                } else {\n                    numCompteur.style.borderColor = &amp;quot;green&amp;quot;;\n                    numCompteurConfirm.style.borderColor = &amp;quot;green&amp;quot;;\n                    errorMessage.style.display = &amp;quot;none&amp;quot;;\n                    submitBtn.disabled = false;\n                    submitBtn.style.backgroundColor = &amp;quot;&amp;quot;; // R\u00e9tablir la couleur normale du bouton\n                }\n            }\n\n            numCompteurConfirm.addEventListener(&amp;quot;input&amp;quot;, validateCounterNumber);\n            numCompteur.addEventListener(&amp;quot;input&amp;quot;, function () {\n                numCompteurConfirm.value = &amp;quot;&amp;quot;; // R\u00e9initialiser la confirmation si lorsiginal change\n                numCompteur.style.borderColor = &amp;quot;&amp;quot;;\n                numCompteurConfirm.style.borderColor = &amp;quot;&amp;quot;;\n                errorMessage.style.display = &amp;quot;none&amp;quot;;\n                submitBtn.disabled = true;\n                submitBtn.style.backgroundColor = &amp;quot;gray&amp;quot;; // D\u00e9sactiver le bouton\n            });\n        });\n    &amp;lt;/script&amp;gt;\n&amp;lt;/div&amp;gt;\n        &amp;lt;footer&amp;gt;\n\n        &amp;lt;/footer&amp;gt;\n    &amp;lt;/div&amp;gt;\n\n\n\n&amp;lt;/div&amp;gt;\n\n\n\n&amp;lt;section&amp;gt;&amp;lt;div&amp;gt;\n    &amp;lt;footer&amp;gt;\n        &amp;lt;!-- Copyright --&amp;gt;\n        &amp;lt;!--        &amp;lt;div class=&amp;quot;text-center text-white mt-2&amp;quot;&amp;gt;--&amp;gt;\n        &amp;lt;!--            \u00a9 2024 Copyright:--&amp;gt;\n        &amp;lt;!--            &amp;lt;a class=&amp;quot;text-white p-2&amp;quot; href=&amp;quot;https://nitatransfert.com/&amp;quot;&amp;gt;NITA TRANSFERT D&amp;#x27;ARGENT&amp;lt;/a&amp;gt;--&amp;gt;\n        &amp;lt;!--        &amp;lt;/div&amp;gt;--&amp;gt;\n\n        &amp;lt;!-- Biblioth\u00e8ques essentielles --&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js&amp;quot; integrity=&amp;quot;sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==&amp;quot; crossorigin=&amp;quot;anonymous&amp;quot; referrerpolicy=&amp;quot;no-referrer&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n\n        &amp;lt;!-- Librairies tierces --&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js&amp;quot; integrity=&amp;quot;sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==&amp;quot; crossorigin=&amp;quot;anonymous&amp;quot; referrerpolicy=&amp;quot;no-referrer&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.jsdelivr.net/npm/sweetalert2@11.13.2/dist/sweetalert2.all.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.jsdelivr.net/npm/@splidejs/splide@4.0.17/dist/js/splide.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdnjs.cloudflare.com/ajax/libs/lity/2.4.1/lity.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://cdn.datatables.net/2.1.8/js/dataTables.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;https://unpkg.com/html5-qrcode&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n\n\n        &amp;lt;!-- Scripts globaux --&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/date.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/allJsScripts.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/validateFormulaire.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/confirmFormSubmission.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n\n        &amp;lt;!-- Scripts sp\u00e9cifiques au projet --&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/agent/script.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/agent/azia.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js-new-design/custom/custom1.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js-new-design/SidebarTest.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n\n        &amp;lt;script src=&amp;quot;/assets/js/formatChamps.js&amp;quot; type=&amp;quot;text/javascript&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n        &amp;lt;script src=&amp;quot;/assets/js/dateExpirer.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;\n\n        &amp;lt;!-- fichier JS de confidentialit\u00e9 --&amp;gt;\n&amp;lt;!--        &amp;lt;script src=&amp;quot;/assets/js/confidentialite.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;--&amp;gt;\n\n        &amp;lt;script&amp;gt;\n            document.addEventListener(&amp;#x27;DOMContentLoaded&amp;#x27;, function () {\n                // R\u00e9cup\u00e8re tous les toasts sur la page\n                var toastElList = [].slice.call(document.querySelectorAll(&amp;#x27;.toast&amp;#x27;));\n\n                // Cr\u00e9e une instance de chaque toast sans les afficher automatiquement\n                var toastList = toastElList.map(function (toastEl) {\n                    return new bootstrap.Toast(toastEl, {\n                        autohide: true, // Garde l&amp;#x27;option autohide\n                        delay: 5000 // D\u00e9finit le d\u00e9lai \u00e0 5 secondes\n                    });\n                });\n            });\n\n        &amp;lt;/script&amp;gt;\n\n        &amp;lt;script&amp;gt;\n            document.addEventListener(&amp;quot;DOMContentLoaded&amp;quot;, function () {\n                function removeHeaderFooter() {\n                    let css = &amp;#x27;@page { margin: 0; } body { margin: 0; padding: 0; }&amp;#x27;,\n                        head = document.head || document.getElementsByTagName(&amp;#x27;head&amp;#x27;)[0],\n                        style = document.createElement(&amp;#x27;style&amp;#x27;);\n\n                    style.type = &amp;#x27;text/css&amp;#x27;;\n                    if (style.styleSheet) {\n                        style.styleSheet.cssText = css;\n                    } else {\n                        style.appendChild(document.createTextNode(css));\n                    }\n                    head.appendChild(style);\n                }\n\n                // Ex\u00e9cuter uniquement lorsque l&amp;#x27;utilisateur lance l&amp;#x27;impression\n                window.addEventListener(&amp;#x27;beforeprint&amp;#x27;, removeHeaderFooter);\n            });\n        &amp;lt;/script&amp;gt;\n\n        &amp;lt;script&amp;gt;\n              document.addEventListener(&amp;quot;DOMContentLoaded&amp;quot;, function() {\n                // Fonction pour m\u00e9langer les chiffres d&amp;#x27;un texte donn\u00e9\n                function shuffleString(str) {\n                    return str.split(&amp;#x27;&amp;#x27;).sort(() =&amp;gt; Math.random() - 0.5).join(&amp;#x27;&amp;#x27;);\n                }\n\n                // Fonction pour crypter le num\u00e9ro du re\u00e7u\n                function encryptReceipt(element) {\n                    if (element) {\n                        let textContent = element.textContent || element.innerText;\n                        let transactionId = textContent.replace(/[^0-9]/g, &amp;#x27;&amp;#x27;); // Extrait uniquement les chiffres\n\n                        if (transactionId) {\n                            let shuffledId = shuffleString(transactionId);\n                            element.textContent = textContent.replace(transactionId, shuffledId); // Remplace uniquement l&amp;#x27;ID\n                        }\n                    }\n                }\n\n                // Appliquer automatiquement sur tous les \u00e9l\u00e9ments avec la classe sp\u00e9cifi\u00e9e\n                document.querySelectorAll(&amp;quot;.encrypt-receipt&amp;quot;).forEach(encryptReceipt);\n            });\n        &amp;lt;/script&amp;gt;\n\n\n        &amp;lt;script&amp;gt;\n            $(document).ready(function () {\n                initializeSelect2();\n            });\n        &amp;lt;/script&amp;gt;\n        &amp;lt;!--fin utilisation des toasts --&amp;gt;\n    &amp;lt;/footer&amp;gt;\n&amp;lt;/div&amp;gt;&amp;lt;/section&amp;gt;\n&amp;lt;!--  Footer End --&amp;gt;\n\n\n&amp;lt;div class=&amp;quot;az-navbar-backdrop&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;div class=&amp;quot;modal-backdrop fade show&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;!-- Footer Start --&amp;gt;&amp;lt;/html&amp;gt;\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;rapport_test_nigelec_prepaye.html&#34;}"></div>
+    <script>
+      (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
+
+class DataManager {
+    setManager(data) {
+        const collapsedCategories = [...getCollapsedCategory(data.renderCollapsed)]
+        const collapsedIds = []
+        const tests = Object.values(data.tests).flat().map((test, index) => {
+            const collapsed = collapsedCategories.includes(test.result.toLowerCase())
+            const id = `test_${index}`
+            if (collapsed) {
+                collapsedIds.push(id)
+            }
+            return {
+                ...test,
+                id,
+                collapsed,
+            }
+        })
+        const dataBlob = { ...data, tests }
+        this.data = { ...dataBlob }
+        this.renderData = { ...dataBlob }
+        setCollapsedIds(collapsedIds)
+    }
+
+    get allData() {
+        return { ...this.data }
+    }
+
+    resetRender() {
+        this.renderData = { ...this.data }
+    }
+
+    setRender(data) {
+        this.renderData.tests = [...data]
+    }
+
+    toggleCollapsedItem(id) {
+        this.renderData.tests = this.renderData.tests.map((test) =>
+            test.id === id ? { ...test, collapsed: !test.collapsed } : test,
+        )
+    }
+
+    set allCollapsed(collapsed) {
+        this.renderData = { ...this.renderData, tests: [...this.renderData.tests.map((test) => (
+            { ...test, collapsed }
+        ))] }
+    }
+
+    get testSubset() {
+        return [...this.renderData.tests]
+    }
+
+    get environment() {
+        return this.renderData.environment
+    }
+
+    get initialSort() {
+        return this.data.initialSort
+    }
+}
+
+module.exports = {
+    manager: new DataManager(),
+}
+
+},{"./storage.js":8}],2:[function(require,module,exports){
+const mediaViewer = require('./mediaviewer.js')
+const templateEnvRow = document.getElementById('template_environment_row')
+const templateResult = document.getElementById('template_results-table__tbody')
+
+function htmlToElements(html) {
+    const temp = document.createElement('template')
+    temp.innerHTML = html
+    return temp.content.childNodes
+}
+
+const find = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return elem.querySelector(selector)
+}
+
+const findAll = (selector, elem) => {
+    if (!elem) {
+        elem = document
+    }
+    return [...elem.querySelectorAll(selector)]
+}
+
+const dom = {
+    getStaticRow: (key, value) => {
+        const envRow = templateEnvRow.content.cloneNode(true)
+        const isObj = typeof value === 'object' && value !== null
+        const values = isObj ? Object.keys(value).map((k) => `${k}: ${value[k]}`) : null
+
+        const valuesElement = htmlToElements(
+            values ? `<ul>${values.map((val) => `<li>${val}</li>`).join('')}<ul>` : `<div>${value}</div>`)[0]
+        const td = findAll('td', envRow)
+        td[0].textContent = key
+        td[1].appendChild(valuesElement)
+
+        return envRow
+    },
+    getResultTBody: ({ testId, id, log, extras, resultsTableRow, tableHtml, result, collapsed }) => {
+        const resultBody = templateResult.content.cloneNode(true)
+        resultBody.querySelector('tbody').classList.add(result.toLowerCase())
+        resultBody.querySelector('tbody').id = testId
+        resultBody.querySelector('.collapsible').dataset.id = id
+
+        resultsTableRow.forEach((html) => {
+            const t = document.createElement('template')
+            t.innerHTML = html
+            resultBody.querySelector('.collapsible').appendChild(t.content)
+        })
+
+        if (log) {
+            // Wrap lines starting with "E" with span.error to color those lines red
+            const wrappedLog = log.replace(/^E.*$/gm, (match) => `<span class="error">${match}</span>`)
+            resultBody.querySelector('.log').innerHTML = wrappedLog
+        } else {
+            resultBody.querySelector('.log').remove()
+        }
+
+        if (collapsed) {
+            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.extras-row').classList.add('hidden')
+        } else {
+            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+        }
+
+        const media = []
+        extras?.forEach(({ name, format_type, content }) => {
+            if (['image', 'video'].includes(format_type)) {
+                media.push({ path: content, name, format_type })
+            }
+
+            if (format_type === 'html') {
+                resultBody.querySelector('.extraHTML').insertAdjacentHTML('beforeend', `<div>${content}</div>`)
+            }
+        })
+        mediaViewer.setup(resultBody, media)
+
+        // Add custom html from the pytest_html_results_table_html hook
+        tableHtml?.forEach((item) => {
+            resultBody.querySelector('td[class="extra"]').insertAdjacentHTML('beforeend', item)
+        })
+
+        return resultBody
+    },
+}
+
+module.exports = {
+    dom,
+    htmlToElements,
+    find,
+    findAll,
+}
+
+},{"./mediaviewer.js":6}],3:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const storageModule = require('./storage.js')
+
+const getFilteredSubSet = (filter) =>
+    manager.allData.tests.filter(({ result }) => filter.includes(result.toLowerCase()))
+
+const doInitFilter = () => {
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+}
+
+const doFilter = (type, show) => {
+    if (show) {
+        storageModule.showCategory(type)
+    } else {
+        storageModule.hideCategory(type)
+    }
+
+    const currentFilter = storageModule.getVisible()
+    const filteredSubset = getFilteredSubSet(currentFilter)
+    manager.setRender(filteredSubset)
+
+    const sortColumn = storageModule.getSort()
+    doSort(sortColumn, true)
+}
+
+module.exports = {
+    doFilter,
+    doInitFilter,
+}
+
+},{"./datamanager.js":1,"./sort.js":7,"./storage.js":8}],4:[function(require,module,exports){
+const { redraw, bindEvents, renderStatic } = require('./main.js')
+const { doInitFilter } = require('./filter.js')
+const { doInitSort } = require('./sort.js')
+const { manager } = require('./datamanager.js')
+const data = JSON.parse(document.getElementById('data-container').dataset.jsonblob)
+
+function init() {
+    manager.setManager(data)
+    doInitFilter()
+    doInitSort()
+    renderStatic()
+    redraw()
+    bindEvents()
+}
+
+init()
+
+},{"./datamanager.js":1,"./filter.js":3,"./main.js":5,"./sort.js":7}],5:[function(require,module,exports){
+const { dom, find, findAll } = require('./dom.js')
+const { manager } = require('./datamanager.js')
+const { doSort } = require('./sort.js')
+const { doFilter } = require('./filter.js')
+const {
+    getVisible,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    getSortDirection,
+    possibleFilters,
+} = require('./storage.js')
+
+const removeChildren = (node) => {
+    while (node.firstChild) {
+        node.removeChild(node.firstChild)
+    }
+}
+
+const renderStatic = () => {
+    const renderEnvironmentTable = () => {
+        const environment = manager.environment
+        const rows = Object.keys(environment).map((key) => dom.getStaticRow(key, environment[key]))
+        const table = document.getElementById('environment')
+        removeChildren(table)
+        rows.forEach((row) => table.appendChild(row))
+    }
+    renderEnvironmentTable()
+}
+
+const addItemToggleListener = (elem) => {
+    elem.addEventListener('click', ({ target }) => {
+        const id = target.parentElement.dataset.id
+        manager.toggleCollapsedItem(id)
+
+        const collapsedIds = getCollapsedIds()
+        if (collapsedIds.includes(id)) {
+            const updated = collapsedIds.filter((item) => item !== id)
+            setCollapsedIds(updated)
+        } else {
+            collapsedIds.push(id)
+            setCollapsedIds(collapsedIds)
+        }
+        redraw()
+    })
+}
+
+const renderContent = (tests) => {
+    const sortAttr = getSort(manager.initialSort)
+    const sortAsc = JSON.parse(getSortDirection())
+    const rows = tests.map(dom.getResultTBody)
+    const table = document.getElementById('results-table')
+    const tableHeader = document.getElementById('results-table-head')
+
+    const newTable = document.createElement('table')
+    newTable.id = 'results-table'
+
+    // remove all sorting classes and set the relevant
+    findAll('.sortable', tableHeader).forEach((elem) => elem.classList.remove('asc', 'desc'))
+    tableHeader.querySelector(`.sortable[data-column-type="${sortAttr}"]`)?.classList.add(sortAsc ? 'desc' : 'asc')
+    newTable.appendChild(tableHeader)
+
+    if (!rows.length) {
+        const emptyTable = document.getElementById('template_results-table__body--empty').content.cloneNode(true)
+        newTable.appendChild(emptyTable)
+    } else {
+        rows.forEach((row) => {
+            if (!!row) {
+                findAll('.collapsible td:not(.col-links', row).forEach(addItemToggleListener)
+                find('.logexpander', row).addEventListener('click',
+                    (evt) => evt.target.parentNode.classList.toggle('expanded'),
+                )
+                newTable.appendChild(row)
+            }
+        })
+    }
+
+    table.replaceWith(newTable)
+}
+
+const renderDerived = () => {
+    const currentFilter = getVisible()
+    possibleFilters.forEach((result) => {
+        const input = document.querySelector(`input[data-test-result="${result}"]`)
+        input.checked = currentFilter.includes(result)
+    })
+}
+
+const bindEvents = () => {
+    const filterColumn = (evt) => {
+        const { target: element } = evt
+        const { testResult } = element.dataset
+
+        doFilter(testResult, element.checked)
+        const collapsedIds = getCollapsedIds()
+        const updated = manager.renderData.tests.map((test) => {
+            return {
+                ...test,
+                collapsed: collapsedIds.includes(test.id),
+            }
+        })
+        manager.setRender(updated)
+        redraw()
+    }
+
+    const header = document.getElementById('environment-header')
+    header.addEventListener('click', () => {
+        const table = document.getElementById('environment')
+        table.classList.toggle('hidden')
+        header.classList.toggle('collapsed')
+    })
+
+    findAll('input[name="filter_checkbox"]').forEach((elem) => {
+        elem.addEventListener('click', filterColumn)
+    })
+
+    findAll('.sortable').forEach((elem) => {
+        elem.addEventListener('click', (evt) => {
+            const { target: element } = evt
+            const { columnType } = element.dataset
+            doSort(columnType)
+            redraw()
+        })
+    })
+
+    document.getElementById('show_all_details').addEventListener('click', () => {
+        manager.allCollapsed = false
+        setCollapsedIds([])
+        redraw()
+    })
+    document.getElementById('hide_all_details').addEventListener('click', () => {
+        manager.allCollapsed = true
+        const allIds = manager.renderData.tests.map((test) => test.id)
+        setCollapsedIds(allIds)
+        redraw()
+    })
+}
+
+const redraw = () => {
+    const { testSubset } = manager
+
+    renderContent(testSubset)
+    renderDerived()
+}
+
+module.exports = {
+    redraw,
+    bindEvents,
+    renderStatic,
+}
+
+},{"./datamanager.js":1,"./dom.js":2,"./filter.js":3,"./sort.js":7,"./storage.js":8}],6:[function(require,module,exports){
+class MediaViewer {
+    constructor(assets) {
+        this.assets = assets
+        this.index = 0
+    }
+
+    nextActive() {
+        this.index = this.index === this.assets.length - 1 ? 0 : this.index + 1
+        return [this.activeFile, this.index]
+    }
+
+    prevActive() {
+        this.index = this.index === 0 ? this.assets.length - 1 : this.index -1
+        return [this.activeFile, this.index]
+    }
+
+    get currentIndex() {
+        return this.index
+    }
+
+    get activeFile() {
+        return this.assets[this.index]
+    }
+}
+
+
+const setup = (resultBody, assets) => {
+    if (!assets.length) {
+        resultBody.querySelector('.media').classList.add('hidden')
+        return
+    }
+
+    const mediaViewer = new MediaViewer(assets)
+    const container = resultBody.querySelector('.media-container')
+    const leftArrow = resultBody.querySelector('.media-container__nav--left')
+    const rightArrow = resultBody.querySelector('.media-container__nav--right')
+    const mediaName = resultBody.querySelector('.media__name')
+    const counter = resultBody.querySelector('.media__counter')
+    const imageEl = resultBody.querySelector('img')
+    const sourceEl = resultBody.querySelector('source')
+    const videoEl = resultBody.querySelector('video')
+
+    const setImg = (media, index) => {
+        if (media?.format_type === 'image') {
+            imageEl.src = media.path
+
+            imageEl.classList.remove('hidden')
+            videoEl.classList.add('hidden')
+        } else if (media?.format_type === 'video') {
+            sourceEl.src = media.path
+
+            videoEl.classList.remove('hidden')
+            imageEl.classList.add('hidden')
+        }
+
+        mediaName.innerText = media?.name
+        counter.innerText = `${index + 1} / ${assets.length}`
+    }
+    setImg(mediaViewer.activeFile, mediaViewer.currentIndex)
+
+    const moveLeft = () => {
+        const [media, index] = mediaViewer.prevActive()
+        setImg(media, index)
+    }
+    const doRight = () => {
+        const [media, index] = mediaViewer.nextActive()
+        setImg(media, index)
+    }
+    const openImg = () => {
+        window.open(mediaViewer.activeFile.path, '_blank')
+    }
+    if (assets.length === 1) {
+        container.classList.add('media-container--fullscreen')
+    } else {
+        leftArrow.addEventListener('click', moveLeft)
+        rightArrow.addEventListener('click', doRight)
+    }
+    imageEl.addEventListener('click', openImg)
+}
+
+module.exports = {
+    setup,
+}
+
+},{}],7:[function(require,module,exports){
+const { manager } = require('./datamanager.js')
+const storageModule = require('./storage.js')
+
+const genericSort = (list, key, ascending, customOrder) => {
+    let sorted
+    if (customOrder) {
+        sorted = list.sort((a, b) => {
+            const aValue = a.result.toLowerCase()
+            const bValue = b.result.toLowerCase()
+
+            const aIndex = customOrder.findIndex((item) => item.toLowerCase() === aValue)
+            const bIndex = customOrder.findIndex((item) => item.toLowerCase() === bValue)
+
+            // Compare the indices to determine the sort order
+            return aIndex - bIndex
+        })
+    } else {
+        sorted = list.sort((a, b) => a[key] === b[key] ? 0 : a[key] > b[key] ? 1 : -1)
+    }
+
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const durationSort = (list, ascending) => {
+    const parseDuration = (duration) => {
+        if (duration.includes(':')) {
+            // If it's in the format "HH:mm:ss"
+            const [hours, minutes, seconds] = duration.split(':').map(Number)
+            return (hours * 3600 + minutes * 60 + seconds) * 1000
+        } else {
+            // If it's in the format "nnn ms"
+            return parseInt(duration)
+        }
+    }
+    const sorted = list.sort((a, b) => parseDuration(a['duration']) - parseDuration(b['duration']))
+    if (ascending) {
+        sorted.reverse()
+    }
+    return sorted
+}
+
+const doInitSort = () => {
+    const type = storageModule.getSort(manager.initialSort)
+    const ascending = storageModule.getSortDirection()
+    const list = manager.testSubset
+    const initialOrder = ['Error', 'Failed', 'Rerun', 'XFailed', 'XPassed', 'Skipped', 'Passed']
+
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    if (type?.toLowerCase() === 'original') {
+        manager.setRender(list)
+    } else {
+        let sortedList
+        switch (type) {
+        case 'duration':
+            sortedList = durationSort(list, ascending)
+            break
+        case 'result':
+            sortedList = genericSort(list, type, ascending, initialOrder)
+            break
+        default:
+            sortedList = genericSort(list, type, ascending)
+            break
+        }
+        manager.setRender(sortedList)
+    }
+}
+
+const doSort = (type, skipDirection) => {
+    const newSortType = storageModule.getSort(manager.initialSort) !== type
+    const currentAsc = storageModule.getSortDirection()
+    let ascending
+    if (skipDirection) {
+        ascending = currentAsc
+    } else {
+        ascending = newSortType ? false : !currentAsc
+    }
+    storageModule.setSort(type)
+    storageModule.setSortDirection(ascending)
+
+    const list = manager.testSubset
+    const sortedList = type === 'duration' ? durationSort(list, ascending) : genericSort(list, type, ascending)
+    manager.setRender(sortedList)
+}
+
+module.exports = {
+    doInitSort,
+    doSort,
+}
+
+},{"./datamanager.js":1,"./storage.js":8}],8:[function(require,module,exports){
+const possibleFilters = [
+    'passed',
+    'skipped',
+    'failed',
+    'error',
+    'xfailed',
+    'xpassed',
+    'rerun',
+]
+
+const getVisible = () => {
+    const url = new URL(window.location.href)
+    const settings = new URLSearchParams(url.search).get('visible')
+    const lower = (item) => {
+        const lowerItem = item.toLowerCase()
+        if (possibleFilters.includes(lowerItem)) {
+            return lowerItem
+        }
+        return null
+    }
+    return settings === null ?
+        possibleFilters :
+        [...new Set(settings?.split(',').map(lower).filter((item) => item))]
+}
+
+const hideCategory = (categoryToHide) => {
+    const url = new URL(window.location.href)
+    const visibleParams = new URLSearchParams(url.search).get('visible')
+    const currentVisible = visibleParams ? visibleParams.split(',') : [...possibleFilters]
+    const settings = [...new Set(currentVisible)].filter((f) => f !== categoryToHide).join(',')
+
+    url.searchParams.set('visible', settings)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const showCategory = (categoryToShow) => {
+    if (typeof window === 'undefined') {
+        return
+    }
+    const url = new URL(window.location.href)
+    const currentVisible = new URLSearchParams(url.search).get('visible')?.split(',').filter(Boolean) ||
+        [...possibleFilters]
+    const settings = [...new Set([categoryToShow, ...currentVisible])]
+    const noFilter = possibleFilters.length === settings.length || !settings.length
+
+    noFilter ? url.searchParams.delete('visible') : url.searchParams.set('visible', settings.join(','))
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getSort = (initialSort) => {
+    const url = new URL(window.location.href)
+    let sort = new URLSearchParams(url.search).get('sort')
+    if (!sort) {
+        sort = initialSort || 'result'
+    }
+    return sort
+}
+
+const setSort = (type) => {
+    const url = new URL(window.location.href)
+    url.searchParams.set('sort', type)
+    window.history.pushState({}, null, unescape(url.href))
+}
+
+const getCollapsedCategory = (renderCollapsed) => {
+    let categories
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const collapsedItems = new URLSearchParams(url.search).get('collapsed')
+        switch (true) {
+        case !renderCollapsed && collapsedItems === null:
+            categories = ['passed']
+            break
+        case collapsedItems?.length === 0 || /^["']{2}$/.test(collapsedItems):
+            categories = []
+            break
+        case /^all$/.test(collapsedItems) || collapsedItems === null && /^all$/.test(renderCollapsed):
+            categories = [...possibleFilters]
+            break
+        default:
+            categories = collapsedItems?.split(',').map((item) => item.toLowerCase()) || renderCollapsed
+            break
+        }
+    } else {
+        categories = []
+    }
+    return categories
+}
+
+const getSortDirection = () => JSON.parse(sessionStorage.getItem('sortAsc')) || false
+const setSortDirection = (ascending) => sessionStorage.setItem('sortAsc', ascending)
+
+const getCollapsedIds = () => JSON.parse(sessionStorage.getItem('collapsedIds')) || []
+const setCollapsedIds = (list) => sessionStorage.setItem('collapsedIds', JSON.stringify(list))
+
+module.exports = {
+    getVisible,
+    hideCategory,
+    showCategory,
+    getCollapsedIds,
+    setCollapsedIds,
+    getSort,
+    setSort,
+    getSortDirection,
+    setSortDirection,
+    getCollapsedCategory,
+    possibleFilters,
+}
+
+},{}]},{},[4]);
+    </script>
+  </footer>
+</html>

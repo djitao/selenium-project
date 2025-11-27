@@ -1,0 +1,110 @@
+pipeline {
+    agent any
+    // triggers {
+        // Planification quotidienne à 8h
+       // cron('H 8 * * *')
+    //}
+
+
+    environment {
+        VENV_DIR = "venv"
+        PROJECT_DIR = "C:\\Users\\RVM476\\Documents\\selenium-project"
+        TEST_DIR = "tests"
+        EMAIL_TO = "salifoun88@gmail.com"
+    }
+
+    stages {
+        stage('Préparation') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    echo '✅ Accès au projet local.'
+                }
+            }
+        }
+
+        stage('Créer l’environnement virtuel') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    bat 'python -m venv venv'
+                }
+            }
+        }
+
+        stage('Installer les dépendances') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    bat '.\\venv\\Scripts\\pip install -r requirements.txt'
+                    bat '.\\venv\\Scripts\\pip install pytest-html'
+                }
+            }
+        }
+
+        stage('Exécuter chaque test et envoyer un email') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    script {
+                        def testFilesRaw = bat(
+                            script: "dir /b ${env.TEST_DIR}\\*.py",
+                            returnStdout: true
+                        ).trim()
+
+                        def testFiles = testFilesRaw.tokenize("\r\n")
+
+                        for (filename in testFiles) {
+                            def testPath = "${env.TEST_DIR}\\${filename}"
+                            def reportFile = "rapport_${filename.replace('.py', '')}.html"
+
+                            echo "▶️ Test en cours : ${filename}"
+
+                            def result = bat(
+                                script: ".\\${env.VENV_DIR}\\Scripts\\pytest ${testPath} --html=${reportFile} --self-contained-html",
+                                returnStatus: true
+                            )
+
+                            def statusText = result == 0 ? "✅ SUCCÈS" : "❌ ÉCHEC"
+
+                            if (fileExists(reportFile)) {
+                                def summary = readFile(reportFile).take(2000)
+
+                                emailext(
+                                    subject: "[${statusText}] Résultat du test ${filename}",
+                                    body: """
+<h3>Rapport du test <code>${filename}</code> — ${statusText}</h3>
+<p>Voici un aperçu du rapport HTML :</p>
+<hr>
+${summary}
+<hr>
+<p>Le rapport complet est en pièce jointe.</p>
+""",
+                                    mimeType: 'text/html',
+                                    to: "${env.EMAIL_TO}",
+                                    attachmentsPattern: "${reportFile}",
+                                    attachLog: false
+                                )
+                            } else {
+                                echo "⚠️ Rapport manquant pour ${filename}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Publier tous les rapports') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    script {
+                        publishHTML(target: [
+                            reportName: 'Rapports HTML',
+                            reportDir: "${env.PROJECT_DIR}",
+                            reportFiles: 'rapport_*.html',
+                            keepAll: true,
+                            alwaysLinkToLastBuild: true,
+                            allowMissing: false
+                        ])
+                    }
+                }
+            }
+        }
+    }
+}
