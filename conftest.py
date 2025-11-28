@@ -27,7 +27,7 @@ def driver():
     options.profile = profile
 
     # 🔧 Service Geckodriver (pour Jenkins)
-    service = Service(executable_path="C:/Tools/geckodriver.exe")
+    service = Service(executable_path="drivers/geckodriver.exe")
 
     # 🚀 Démarrer Firefox headless
     driver = webdriver.Firefox(service=service, options=options)
