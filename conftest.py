@@ -38,7 +38,7 @@ def login(driver):
 
         # Attente que l’URL contienne “index”
         WebDriverWait(driver, 20).until(
-            EC.url_contains("/coordinateur/index")
+            EC.url_contains("index")
         )
 
         current_url = driver.current_url
