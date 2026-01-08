@@ -1,31 +1,46 @@
+import os
 import pytest
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
+
+def get_gecko_driver_path():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(base_dir, "drivers", "geckodriver.exe")
+
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"Geckodriver introuvable : {path}")
+
+    return path
+
 
 @pytest.fixture(scope="class")
 def driver():
     options = Options()
 
-    # 🟢 Créer un profil Firefox pour HTTPS-Only
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("dom.security.https_only_mode", True)
-    profile.set_preference("dom.security.https_only_mode_pbm", True)  # navigation privée
+    # 🔥 HEADLESS (CI / Jenkins)
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    # ⚠️ Accepter les certificats auto-signés
-    profile.set_preference("webdriver_accept_untrusted_certs", True)
-    profile.set_preference("webdriver_assume_untrusted_issuer", False)
+    # ✅ Préférences Firefox (BONNE MÉTHODE)
+    options.set_preference("dom.security.https_only_mode", True)
+    options.set_preference("dom.security.https_only_mode_pbm", True)
+    options.set_preference("webdriver_accept_untrusted_certs", True)
+    options.set_preference("webdriver_assume_untrusted_issuer", False)
 
-    # 🔹 Associer le profil aux options
-    options.profile = profile
+    service = Service(executable_path=get_gecko_driver_path())
 
-    driver = webdriver.Firefox(options=options)
-    driver.maximize_window()
+    driver = webdriver.Firefox(service=service, options=options)
+    driver.set_window_size(1920, 1080)
+
     yield driver
     driver.quit()
-
 
 @pytest.fixture(scope="class")
 def login(driver):
