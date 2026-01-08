@@ -57,27 +57,35 @@ def driver():
 
 @pytest.fixture(scope="class")
 def login(driver):
-
+    wait = WebDriverWait(driver, 30)
     driver.get("https://dev.nitacashhub.com/login")
 
     try:
-        # Saisie du login
+        # Attente formulaire
+        wait.until(EC.presence_of_element_located((By.ID, "username")))
+
+        # Saisie credentials
         driver.find_element(By.ID, "username").send_keys("ALINA466")
-        driver.find_element(By.NAME, "password").send_keys("111111111")
+        driver.find_element(By.NAME, "password").send_keys("11111111")
         driver.find_element(By.CLASS_NAME, "submit-btn").click()
 
-        # Attente de la redirection
-        WebDriverWait(driver, 20).until(
-            EC.url_contains("index")
+        # ✅ Attente URL finale exacte
+        wait.until(
+            EC.url_contains("/coordinateur/index")
         )
 
-        current_url = driver.current_url
-        print("✅ Connexion réussie :", current_url)
+        # ✅ Sécurité supplémentaire : menu visible
+        wait.until(
+            EC.presence_of_element_located((By.CLASS_NAME, "nav-links"))
+        )
 
-        if "error" in current_url.lower():
-            pytest.fail("❌ Échec de la connexion : URL contient 'error'")
-
+        print("✅ Login réussi :", driver.current_url)
         yield True
 
     except Exception as e:
-        pytest.fail(f"❌ Problème pendant le login : {str(e)}")
+        print("❌ Login échoué")
+        print("URL actuelle :", driver.current_url)
+
+        driver.save_screenshot("reports/login_error.png")
+
+        pytest.fail(f"❌ Problème pendant le login : {type(e).__name__}")
