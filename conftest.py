@@ -52,8 +52,8 @@ def login(driver):
         driver.find_element(By.CLASS_NAME, "submit-btn").click()
 
         # Attente que l’URL contienne “index”
-        WebDriverWait(driver, 20).until(
-            EC.url_contains("index")
+        WebDriverWait(driver, 30).until(
+            EC.url_contains("/coordinateur/index")
         )
 
         current_url = driver.current_url
