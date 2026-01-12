@@ -33,6 +33,11 @@ def driver():
     options.set_preference("dom.security.https_only_mode_pbm", True)
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", False)
+    options.set_preference("dom.webdriver.enabled", False)
+    options.set_preference("useAutomationExtension", False)
+    options.set_preference("general.useragent.override",
+                           "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
+                           )
 
     service = Service(executable_path=get_gecko_driver_path())
 
