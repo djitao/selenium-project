@@ -46,12 +46,7 @@ def driver():
 
     yield driver
     driver.quit()
-@pytest.fixture(autouse=True)
-def clear_browser_data(driver):
-    driver.delete_all_cookies()
-    driver.execute_script("window.localStorage.clear();")
-    driver.execute_script("window.sessionStorage.clear();")
-    yield
+
 @pytest.fixture(scope="class")
 def login(driver):
     wait = WebDriverWait(driver, 30)
