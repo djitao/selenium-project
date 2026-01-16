@@ -18,39 +18,40 @@ def get_gecko_driver_path():
     return path
 
 
-# 🟢 NAVIGATEUR PROPRE POUR CHAQUE TEST (100 % ISOLÉ)
+# 🟢 NAVIGATEUR PROPRE POUR CHAQUE TEST
 @pytest.fixture(scope="function")
 def driver():
     options = Options()
 
-    # 🔥 Headless stable CI
+    # 🔥 HEADLESS (CI / Jenkins)
     options.add_argument("--headless")
-    options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # ✅ Préférences sûres Firefox
+    # ✅ Préférences Firefox
     options.set_preference("dom.security.https_only_mode", True)
     options.set_preference("dom.security.https_only_mode_pbm", True)
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", False)
 
-    service = Service(get_gecko_driver_path())
-    driver = webdriver.Firefox(service=service, options=options)
+    service = Service(executable_path=get_gecko_driver_path())
 
-    # ✅ SEULE opération autorisée ici
+    driver = webdriver.Firefox(service=service, options=options)
+    driver.set_window_size(1920, 1080)
+    # 🔒 Nettoyage TOTAL
     driver.delete_all_cookies()
+
 
     yield driver
 
     driver.quit()
 
 
-# 🟢 LOGIN ISOLÉ ET ROBUSTE
+# 🟢 LOGIN REFAIT À CHAQUE TEST
 @pytest.fixture(scope="function")
 def login(driver):
-    wait = WebDriverWait(driver, 40)
+    wait = WebDriverWait(driver, 60)
 
     driver.get("https://dev.nitacashhub.com/login")
 
@@ -66,17 +67,13 @@ def login(driver):
         EC.element_to_be_clickable((By.CLASS_NAME, "submit-btn"))
     ).click()
 
-    # ✅ Preuve solide du login
-    wait.until(
-        EC.any_of(
-            EC.url_contains("/coordinateur"),
-            EC.presence_of_element_located((By.CLASS_NAME, "nav-links"))
-        )
-    )
+    # 3️⃣ PREUVE UNIQUE & STABLE
+    wait.until(lambda d: "/coordinateur" in d.current_url)
 
-    assert "/coordinateur" in driver.current_url, \
-        f"❌ Login KO : {driver.current_url}"
+    # 4️⃣ ASSERT FINAL
+    current_url = driver.current_url
+    assert "/coordinateur" in current_url, f"LOGIN ÉCHOUÉ : {current_url}"
 
-    print("✅ Connexion réussie :", driver.current_url)
+    print("✅ LOGIN OK →", current_url)
 
     yield driver
