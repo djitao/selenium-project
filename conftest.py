@@ -18,57 +18,65 @@ def get_gecko_driver_path():
     return path
 
 
-@pytest.fixture(scope="class")
+# 🟢 NAVIGATEUR PROPRE POUR CHAQUE TEST (100 % ISOLÉ)
+@pytest.fixture(scope="function")
 def driver():
     options = Options()
 
-    # 🔥 HEADLESS (CI / Jenkins)
+    # 🔥 Headless stable CI
     options.add_argument("--headless")
+    options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    # ✅ Préférences Firefox (BONNE MÉTHODE)
+    # ✅ Préférences sûres Firefox
     options.set_preference("dom.security.https_only_mode", True)
     options.set_preference("dom.security.https_only_mode_pbm", True)
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", False)
-    options.set_preference("dom.webdriver.enabled", False)
-    options.set_preference("useAutomationExtension", False)
-    options.set_preference("general.useragent.override",
-                           "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0"
-                           )
 
-    service = Service(executable_path=get_gecko_driver_path())
-
+    service = Service(get_gecko_driver_path())
     driver = webdriver.Firefox(service=service, options=options)
-    driver.set_window_size(1920, 1080)
+
+    # ✅ SEULE opération autorisée ici
+    driver.delete_all_cookies()
 
     yield driver
+
     driver.quit()
 
-@pytest.fixture(scope="class")
+
+# 🟢 LOGIN ISOLÉ ET ROBUSTE
+@pytest.fixture(scope="function")
 def login(driver):
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 40)
 
     driver.get("https://dev.nitacashhub.com/login")
 
     wait.until(EC.visibility_of_element_located((By.ID, "username")))
 
+    driver.find_element(By.ID, "username").clear()
     driver.find_element(By.ID, "username").send_keys("ALINA466")
+
+    driver.find_element(By.NAME, "password").clear()
     driver.find_element(By.NAME, "password").send_keys("111111111")
 
-    btn = wait.until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "submit-btn"))
-    )
-    btn.click()
-
-    # ✅ ATTENTE D’UN ÉLÉMENT POST-LOGIN
     wait.until(
-        EC.presence_of_element_located((By.CLASS_NAME, "nav-links"))
+        EC.element_to_be_clickable((By.CLASS_NAME, "submit-btn"))
+    ).click()
+
+    # ✅ Preuve solide du login
+    wait.until(
+        EC.any_of(
+            EC.url_contains("/coordinateur"),
+            EC.presence_of_element_located((By.CLASS_NAME, "nav-links"))
+        )
     )
 
-    print("✅ Connexion réussie")
-    print("URL actuelle :", driver.current_url)
+    assert "/coordinateur" in driver.current_url, \
+        f"❌ Login KO : {driver.current_url}"
+
+    print("✅ Connexion réussie :", driver.current_url)
 
     yield driver

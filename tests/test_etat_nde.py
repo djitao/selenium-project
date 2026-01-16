@@ -1,11 +1,6 @@
 from selenium.webdriver import Keys
 
-from helpers.click_button_text import click_button_by_text
-from helpers.presence_of_element_to_click import click_if_present
-from helpers.select_ville_helper import select_ville
-from helpers.scroll_helper import scroll_to_element
-from helpers.element_utils import wait_for_element
-from helpers.menu_submenu_helpers import click_on_sidebar
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
