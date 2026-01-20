@@ -67,8 +67,10 @@ def login(driver):
         EC.element_to_be_clickable((By.CLASS_NAME, "submit-btn"))
     ).click()
 
-    # 3️⃣ PREUVE UNIQUE & STABLE
-    wait.until(lambda d: "/coordinateur" in d.current_url)
+    # ✅ PREUVE UNIQUE, RÉELLE, STABLE
+    wait.until(
+        EC.presence_of_element_located((By.CLASS_NAME, "nav-links"))
+    )
 
     # 4️⃣ ASSERT FINAL
     current_url = driver.current_url
