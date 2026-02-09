@@ -31,21 +31,19 @@ def get_gecko_driver_path():
 def driver():
     options = Options()
 
-    # 🔥 HEADLESS (CI / Jenkins)
+    # 🔥 HEADLESS CI
     options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")
 
-    # ✅ Préférences Firefox
-
+    # ✅ Certificats (SAFE)
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", False)
 
     service = Service(executable_path=get_gecko_driver_path())
 
     driver = webdriver.Firefox(service=service, options=options)
-    driver.set_window_size(1920, 1080)
     # 🔒 Nettoyage TOTAL
     driver.delete_all_cookies()
 
