@@ -38,8 +38,7 @@ def driver():
     options.add_argument("--disable-dev-shm-usage")
 
     # ✅ Préférences Firefox
-    options.set_preference("dom.security.https_only_mode", False)
-    options.set_preference("dom.security.https_only_mode_pbm", False)
+
     options.set_preference("webdriver_accept_untrusted_certs", True)
     options.set_preference("webdriver_assume_untrusted_issuer", False)
 
